@@ -18,7 +18,7 @@ N_active=64;            % Number of active elements
 % xmit_N_active=128;      % Number of active transmit elements for constant F#
 % rec_N_active=128;	    % Number of active receive elements for constant F#
 
-%  Set the sampling frequency 
+% Set the sampling frequency 
 set_sampling(fs);
 
 %   Load the computer phantom
@@ -53,25 +53,26 @@ xdc_impulse (receive_aperture, impulse_response);
 %  Make the apodization vector
 apo=ones(1,N_active);
 
-foci = 10:20:120;
-figure(1)
+[trans_foci] = input('Transmit foci vector: ');
+[receive_foci] = input('Receive foci vector (should be of same length as transmit): ');
+num_plots = length(trans_foci);
+figure
+for j = 1:num_plots
+    subplot(1,num_plots,j)
+    hold on
 
-for j = 1:length(foci)
+    % Set focus
+    trans_focus = trans_foci(j)/1000;
+    receive_focus = receive_foci(j)/1000;
 
-% Set focus
-trans_focus = 30/1000;
-receive_focus = foci(j)/1000;
-
-subplot(1,length(foci),j)
-
-sesr
-mk_img
-
-if j==1;
-    axis on
-    ylabel('Axial distance [mm]')
-    text(40,135,'Lateral distance [mm]')
+    sesr
+    mk_img
+    
+    scatter([-10,10],[trans_foci(j),receive_foci(j)],100,'Xr')
+    if j==1;
+        axis on
+        ylabel('Axial distance [mm]') 
+        xlabel('Lateral distance [mm]')
+    end
+    hold off
 end
-
-end
-

@@ -1,7 +1,6 @@
 % Conventional imaging with single emision single receive focus and
 % apodixation vector
 %
-
 x= -image_width/2;
 image_data=0;
 
