@@ -43,7 +43,7 @@ for i=1:n
   new_env(i,:)=interp(log_env(i,:),ID);
   end
 [n,m]=size(new_env);
-  
+
 fn=fs/D;
 image(((1:(ID*no_lines-1))*d_x/ID-no_lines*d_x/2)*1000,((1:n)/fn+min_sample/fs)*1540/2*1000,new_env)
 colormap(gray(128))
