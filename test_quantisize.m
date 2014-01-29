@@ -1,4 +1,5 @@
 % Script to test quantize funtion
+clear all; close all;
 
 han=hanning(192);
 levels = 16;
