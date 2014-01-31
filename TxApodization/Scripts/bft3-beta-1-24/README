@@ -1,0 +1,34 @@
+$Id: README,v 1.6 2010-07-18 12:41:35 jmh Exp $
+
+make install DESTDIR=/tmp/dist
+
+# Tag latest version
+cvs rtag alpha-1-5 aperture
+
+# Check out tagged version
+cvs co -r alpha-1-6 aperture
+
+cd aperture
+
+# Clean up stuff if directory is not empty
+make distclean
+
+# Generate configure script
+aclocal -I /usr/share/aclocal -I./config
+autoheader
+automake --add-missing
+autoconf
+
+# Insert CVS version into configure script
+sed -e 's/@PACKAGE_VERSION@/alpha-1-6/g' configure >> configure.tmp
+mv configure.tmp configure
+chmod u+x configure
+
+# Steps from here and onwards can be executed using the distributed package
+
+# Run configure script and compile source
+./configure --with-matlab=/usr/local/matlab2009a
+make
+
+# Create distribution tar ball
+make dist

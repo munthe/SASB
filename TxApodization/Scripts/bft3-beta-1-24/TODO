@@ -1,0 +1,17 @@
+$Id: TODO,v 1.21 2011-05-05 10:41:57 jmh Exp $
+TODO:
+
+Function:
+
+Form: (look)
+ - __cplusplus name mangling is it necessary for defines, e.g. wait_thread
+ - rename f to f-number
+ - rename manual to parametric
+
+Fit: (code)
+ - Construct line using apodization Line(apod, aporef, distances, values)
+ - Clean-up line.setApodization (use nifty STL rather than C)
+ - Unit tests (more)
+ - Automated tests (include m-files)
+
+use cvstrac.org

@@ -1,0 +1,50 @@
+introduce conv_float.cpp
+
+_mm_cvtpd_ps
+
+number of emissions in aperture, contains active elements
+
+apodization is assocaited with an emission
+
+// Alternative to view
+container_type::iterator itFilteredEnd =
+std::partition(my_container.begin(), my_container.end(), my_filter);
+doStuff(my_container.begin(), itFilteredEnd);
+
+template <class TIteraror>
+class range_container
+{
+public:
+// container types
+typedef typename std::iterator_traits<TIteraror>::value_type
+value_type;
+typedef TIteraror iterator;
+typedef std::const_iterator<TIteraror> iterator;
+typedef typename std::iterator_traits<TIteraror>::reference
+reference;
+typedef const value_type& const_reference;
+typedef typename std::iterator_traits<TIteraror>::pointer
+pointer;
+typedef typename std::iterator_traits<TIteraror>::difference_type
+difference_type;
+typedef typename std::iterator_traits<TIteraror>::size_type
+size_type;
+
+// constructor
+range_container(iterator begin_range, iterator end_range)
+, _end  (end_range)
+{}
+// do the same for copy constructor operator and swap
+
+iterator begin(){ return _begin;}
+iterator   end(){ return _end;  }
+// same for const flavor
+
+bool empty()const { return _begin == _end }
+
+size_type size()const { return std::distance(_begin,_end);}
+
+private:
+iterator  _begin;
+iterator  _end;
+};

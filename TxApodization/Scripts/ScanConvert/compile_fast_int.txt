@@ -1,0 +1,7 @@
+#  Script for compiling the fast_int C-code
+#
+#  Can be run under Matlab or at the command line
+#
+#  version 1.1, September 3, 2007, JAJ
+
+mex  -O -output fast_int fast_int.c
