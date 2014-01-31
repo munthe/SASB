@@ -17,3 +17,4 @@ figure(1)
 hold on
 plot(han_expo,'r')
 plot(han_lin,'b')
+plot(hanning(192),'g');
