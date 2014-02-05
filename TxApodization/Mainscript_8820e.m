@@ -37,10 +37,11 @@ useCaseParams.acmodparams(1).layerthickness2 = 0;
 useCaseParams.acmodparams(1).layerthickness3 = 0;
      
 
-useCaseParams.bfxmitparams(1).xmitfnum = 2;
-useCaseParams.bfxmitparams(1).xmitapodishape = 0; % 0 boxcar,1 hamming, 2 gauss
-useCaseParams.bfxmitparams(1).xmitapodigausswidth = 0.2; 
-useCaseParams.bfxmitparams(1).xmitfocus = 0.07;
+useCaseParams.bfxmitparams(1).xmitfnum = 1;
+useCaseParams.bfxmitparams(1).xmitapodishape = 1; % 0 boxcar,1 hamming, 2 gauss
+useCaseParams.bfxmitparams(1).xmitapodigausswidth = 0.7; 
+useCaseParams.bfxmitparams(1).xmitfocus = 0.02;
+useCaseParams.bfxmitparams(1).xmitapodilevels = [];
 
 
 %  Set the impulse response and excitation
