@@ -101,7 +101,7 @@ useCaseParams.scanparams(1).startdepthq = 0.0;
 useCaseParams.scanparams(1).stopdepthq = 0.12;
 
 useCaseParams.scanparams(1).startlinenumq = 0;
-useCaseParams.scanparams(1).stoplinenumq = 268;
+useCaseParams.scanparams(1).stoplinenumq = 269;
 
 useCaseParams.scanparams(1).scanareadscr.startlineorigin.y = 0;
 useCaseParams.scanparams(1).scanareadscr.startlineorigin.x = 0.04;
