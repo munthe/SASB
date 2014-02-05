@@ -153,30 +153,52 @@ switch(ROC)
                     end
                 end
         end
-    otherwise        
-        ElementRadius       = AROC;
-        ShellRadius         = ROC;
-        AngleStep           = (StopAngle-StartAngle) / (Nlines-1);
-        
-        
-        pos = zeros(Nlines,3);
-        angle = zeros(Nlines,1);
-        dir = zeros(Nlines,3); 
-        for k = 1:Nlines
-            arcx          = StartAngle+(k-1)*AngleStep;
-            fRad          = ElementRadius;
-            pos(k,1)      = fRad * cos(arcx);
-            pos(k,3)      = fRad * sin(arcx) - ShellRadius;
-%             angle(k)      = arcx+Steeringangle+Phasedangle(k);
-            angle(k)      = arcx+Steeringangle;
-        end 
-  
-        
-        % calculate unit vector of direction
-        dir(:,1) = cos(angle);
-        dir(:,3) = sin(angle);
-        
+    otherwise   
+         if(useCaseParams.scanparams(1).scanareadscr.stoplineangle == ...
+                 useCaseParams.scanparams(1).scanareadscr.startlineangle) % 1d imaging - linear
+            pos = [linspace(Startlineorigin_X,Stoplineorigin_X,Nlines)',...
+                   linspace(Startlineorigin_Y,Stoplineorigin_Y,Nlines)', ...
+                   repmat(-Aclayerthickness,Nlines,1)];
 
+            Phasedangle = linspace(-useCaseParams.scanparams(1).phasedangle,useCaseParams.scanparams(1).phasedangle,Nlines)';   
+               
+            angle = repmat(pi/2+Steeringangle,Nlines,1)+Phasedangle;
+
+            % calculate unit vector of direction
+%             dir = [cos(angle) zeros(Nlines,1) sin(angle)];
+             % Determine scanline direction
+                pasedangle = useCaseParams.scanparams(1).phasedangle;
+
+            pasedangles = linspace(-pasedangle,pasedangle,Nlines);
+
+            for n = 1:Nlines
+                dir(n,:) = beam2cart_coord(1,0, pasedangles(n));
+            end
+         else % curved
+                 
+            ElementRadius       = AROC;
+            ShellRadius         = ROC;
+            AngleStep           = (StopAngle-StartAngle) / (Nlines-1);
+
+
+            pos = zeros(Nlines,3);
+            angle = zeros(Nlines,1);
+            dir = zeros(Nlines,3); 
+            for k = 1:Nlines
+                arcx          = StartAngle+(k-1)*AngleStep;
+                fRad          = ElementRadius;
+                pos(k,1)      = fRad * cos(arcx);
+                pos(k,3)      = fRad * sin(arcx) - ShellRadius;
+    %             angle(k)      = arcx+Steeringangle+Phasedangle(k);
+                angle(k)      = arcx+Steeringangle;
+            end 
+
+
+            % calculate unit vector of direction
+            dir(:,1) = cos(angle);
+            dir(:,3) = sin(angle);
+        
+         end
             
 end
 

@@ -1,0 +1,23 @@
+\form#0:$t_{\mathrm{\scriptscriptstyle{TOF}}} = t_{\mathrm{\scriptscriptstyle{TOF}}_{\mathrm{xmt}}}+t_{\mathrm{\scriptscriptstyle{TOF}}_{\mathrm{rcv}}}$
+\form#1:$c$
+\form#2:\begin{eqnarray}\label{eq:q} t_{\mathrm{\scriptscriptstyle{TOF}}}&=& t_{\mathrm{\scriptscriptstyle{TOF}}_{\mathrm{xmt}}} + t_{\mathrm{\scriptscriptstyle{TOF}}_{\mathrm{rcv}}}\nonumber \\ &=&\frac{\left|\vec{r}_{\mathrm{fp}}-\vec{r}_{\mathrm{xmt}}\right|+\left|\vec{r}_{\mathrm{rcv}}-\vec{r}_{\mathrm{fp}}\right|}{c}. \end{eqnarray}
+\form#3:$\vec{r}_{\mathrm{\scriptscriptstyle{fp}}_{\mathrm{xmt}}}$
+\form#4:$t_{\mathrm{\scriptscriptstyle{TOF}}}$
+\form#5:\begin{equation}t_{\mathrm{\scriptscriptstyle{TOF}}}=\frac{\left|\vec{r}_{\mathrm{fp}_{\mathrm{xmt}}}-\vec{r}_{\mathrm{xmt}}\right|\pm \left|\vec{r}_{\mathrm{fp}}-\vec{r}_{\mathrm{fp}_{\mathrm{xmt}}}\right|+\left|\vec{r}_{\mathrm{rcv}}-\vec{r}_{\mathrm{fp}}\right|}{c},\end{equation}
+\form#6:$\pm $
+\form#7:$\vec{r}_{\mathrm{fp}_{\mathrm{xmt}}}$
+\form#8:\begin{equation}t_{\mathrm{\scriptscriptstyle{TOF}}}=\frac{\left|\vec{r}_{\mathrm{fp}_{\mathrm{xmt}}}-\vec{r}_{\mathrm{xmt}}\right|\pm \left|\vec{r}_{\mathrm{fp}}-\vec{r}_{\mathrm{fp}_{\mathrm{xmt}}}\right|+\left|\vec{r}_{\mathrm{fp}_{\mathrm{rcv}}}-\vec{r}_{\mathrm{rcv}}\right|\pm \left|\vec{r}_{\mathrm{fp}}-\vec{r}_{\mathrm{fp}_{\mathrm{rcv}}}\right|}{c},\end{equation}
+\form#9:$t_{\mathrm{\scriptscriptstyle{TOF}}_{\mathrm{xmt}}}$
+\form#10:\begin{equation}t_{\mathrm{\scriptscriptstyle{TOF}}}=\frac{\left|\left(\vec{r}_{\mathrm{fp}_{\mathrm{xmt}}}-\vec{r}_{\mathrm{xmt}}\right)\cdot \vec{n}\right| + \left|\vec{r}_{\mathrm{rcv}}-\vec{r}_{\mathrm{fp}}\right|}{c},\end{equation}
+\form#11:$\vec{r}_{\mathrm{xmt}}$
+\form#12:$\vec{n}$
+\form#13:$\vec{r}_{\mathrm{fp}}$
+\form#14:\begin{equation}I\left(\vec{r}_{\mathrm{fp}}\right)=\sum_{\mathrm{xmt}=1}^{N_{\mathrm{xmt}}}\mathcal{A}_{\mathrm{xmt}}\left(\vec{r}_{\mathrm{fp}}\right)\sum_{\mathrm{rcv}=1}^{N_{\mathrm{rcv}}}\mathcal{A}_{\mathrm{rcv}}\left(\vec{r}_{\mathrm{fp}}\right)s_{\mathrm{xmt},\mathrm{rcv}}\left(t_{\mathrm{\scriptscriptstyle{TOF}}}\left(\vec{r}_{\mathrm{xmt}},\vec{r}_{\mathrm{fp}_{\mathrm{xmt}}},\vec{r}_{\mathrm{fp}},\vec{r}_{\mathrm{rcv}}\right) \right)\end{equation}
+\form#15:$N_{\mathrm{rcv}}$
+\form#16:$\mathcal{A}(\vec{r}_{\mathrm{fp}})$
+\form#17:$s_{\mathrm{xmt},\mathrm{rcv}}(t)$
+\form#18:$\mathrm{xmt}$
+\form#19:$\mathrm{rcv}$
+\form#20:$N_{\mathrm{xmt}}$
+\form#21:$N_{\mathrm{xmt}}=1$
+\form#22:$\vec{r}_{\mathrm{fp}_{2}}$

@@ -19,7 +19,6 @@
 
 
 function [] = Data_AcquisitionVer3(varargin)
-% addpath('Z:\Matlab\SequentialBeamformation\myFun')
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%               Check if number of arguments is correct                 %%
@@ -49,7 +48,7 @@ debug_plot_emissions = 0;
 baffle = 0;
 scanlines = [];
 display = 1;
-max_no_active_elements = 32;
+max_no_active_elements = 64;
 for k = 1:2:nargin
     switch(lower(varargin{k}))
         case{'usecaseparams'}
@@ -328,10 +327,26 @@ end
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Generate transmit scan lines
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 xmt = Generate_Scanlines(useCaseParams, max_no_active_elements, symmetric, 'transmit', debug_scanlines);
 
+xmt.txapo = xmt.apo;
+xmt.rxapo = xmt.apo;
 
 
+%     figure(103)
+%     p(1) = plot3(xmt.scanline_ref_point(:,1)*1000,xmt.scanline_ref_point(:,2)*1000, xmt.scanline_ref_point(:,3)*1000,'xr');
+%     hold on
+%     p(2) = plot3(xmt.focus_point(:,1)*1000,xmt.focus_point(:,2)*1000, xmt.focus_point(:,3)*1000,'.');
+% 
+%     for k = 1:1:xmt.no_lines
+%         plot3([xmt.scanline_ref_point(k,1) xmt.focus_point(k,1)],[xmt.scanline_ref_point(k,2) xmt.focus_point(k,2)],[xmt.scanline_ref_point(k,3) xmt.focus_point(k,3)],'r')
+%     end
+%     p(3) = plot3(TransducerDescription.element_positions(:,1)*1000,...
+%                  TransducerDescription.element_positions(:,2)*1000,...
+%                  TransducerDescription.element_positions(:,3)*1000,'o');
+
+             
 % figure,plot(TransducerDescription.element_positions(:,1),TransducerDescription.element_positions(:,3),'*r')
 % hold on
 % plot(Geo.element_position_table(:,1),Geo.element_position_table(:,2),'sb')
@@ -395,39 +410,23 @@ fieldII.emit_aperture = xdc_rectangles(rect, center, [0 0 0]);
 % create receive aperture in FieldII
 fieldII.receive_aperture = xdc_rectangles(rect, center, [0 0 0]);
 
-fieldII.emit_aperture = xdc_focused_array(  TransducerDescription.nr_elements_x, ...
-                                            TransducerDescription.width, ...
-                                            TransducerDescription.height, ...
-                                            TransducerDescription.kerf, ...
-                                            TransducerDescription.elevation_focus, ...
-                                            11, 11, [0 0 0]);
-fieldII.receive_aperture = xdc_focused_array(TransducerDescription.nr_elements_x, ...
-                                            TransducerDescription.width, ...
-                                            TransducerDescription.height, ...
-                                            TransducerDescription.kerf, ...
-                                            TransducerDescription.elevation_focus, ...
-                                            11, 11, [0 0 0]);
-
-% Th = xdc_2d_array(TransducerDescription.nr_elements_x, TransducerDescription.nr_elements_x, TransducerDescription.width, TransducerDescription.height, ...
-% TransducerDescription.kerf, TransducerDescription.kerf, enabled, 1, 1, TransducerDescription.elevation_focus);
-
-
+                           
 if(debug == 1)
     try
-    % fetch data from Field II
-    data = xdc_get(fieldII.receive_aperture,'rect');
-    % fetch unique element indexes
-    [val index] = unique(data(1,:));
-    % fetch data structure from Field II
-    data = xdc_get(fieldII.receive_aperture);
+        % fetch data from Field II
+        data = xdc_get(fieldII.receive_aperture,'rect');
+        % fetch unique element indexes
+        [val index] = unique(data(1,:));
+        % fetch data structure from Field II
+        data = xdc_get(fieldII.receive_aperture);
 
-    figure;
-    TransducerDescription.plot_elements
-    TransducerDescription.plot_GeoDebugger_elements
-    hold on
-    plot(data(24,index)*1000,data(26,index)*1000,'og','displayname','Element center position (FieldII)')
-    plot(TransducerDescription.element_positions(:,1)*1000,TransducerDescription.element_positions(:,3)*1000,'xg','displayname','Element center position (transducer)')
-    title('FieldII element setup')     
+        figure;
+        TransducerDescription.plot_elements
+        TransducerDescription.plot_GeoDebugger_elements
+        hold on
+        plot(data(24,index)*1000,data(26,index)*1000,'og','displayname','Element center position (FieldII)')
+        plot(TransducerDescription.element_positions(:,1)*1000,TransducerDescription.element_positions(:,3)*1000,'xg','displayname','Element center position (transducer)')
+        title('FieldII element setup')     
     end
 end
 
@@ -450,6 +449,7 @@ xdc_impulse(fieldII.emit_aperture, TransducerDescription.xmt_impulse_response);
 
 % Initialization of delays and RCV apodization
 xdc_apodization(fieldII.receive_aperture,0,ones( 1,TransducerDescription.nr_elements_x));
+xdc_apodization(fieldII.emit_aperture,0,ones( 1,TransducerDescription.nr_elements_x));
 xdc_focus_times(fieldII.receive_aperture,0,zeros(1,TransducerDescription.nr_elements_x));
 xdc_focus_times(fieldII.emit_aperture,   0,zeros(1,TransducerDescription.nr_elements_x));
 
@@ -467,8 +467,9 @@ end
 if(isempty(scanlines))
     scanlines = 1:xmt.no_lines;
 end
+RFdata_temp = zeros(3500,xmt.no_lines);
+field_rcv_focus = 1;
 
-field_rcv_focus = 0;
 if(debug == 0) 
     for lateral_index = scanlines  
         if(rem(lateral_index,ceil(xmt.no_lines/5)) == 0 && display == 1)
@@ -476,15 +477,25 @@ if(debug == 0)
         end
         
         % setup transmit apodization function
-        trm_apo = xmt.apo(lateral_index,:);
+        trm_apo = xmt.txapo(lateral_index,:);
         trm_delay = xmt.delays(lateral_index,:);
+        
+        % setup receive apodization function
+        rrm_apo = xmt.rxapo(lateral_index,:);
+        rrm_delay = xmt.delays(lateral_index,:);
 
         % setup transmit delay profile and apodization function
         xdc_apodization(fieldII.emit_aperture, 0, trm_apo);
-        xdc_times_focus(fieldII.emit_aperture,0,trm_delay);
+        xdc_times_focus(fieldII.emit_aperture,0, trm_delay);
 
         
         % calculate the field
+%         figure(100)
+%         subplot(2,1,1)
+%         plot(trm_apo)
+%         subplot(2,1,2)
+%         plot(trm_delay)
+%         drawnow
         
         switch(field_rcv_focus)
             case 0
@@ -495,10 +506,15 @@ if(debug == 0)
                 %imagesc(RFdata)
                 %drawnow
             case 1
-                xdc_apodization(fieldII.receive_aperture,0,trm_apo);
-%                 xdc_focus_times(fieldII.receive_aperture,0,trm_delay);
-                 xdc_center_focus(fieldII.receive_aperture, [xmt.scanline_ref_point(lateral_index,1) 0 0]);
-                 xdc_focus(fieldII.receive_aperture,0,[xmt.scanline_ref_point(lateral_index,1) 0 40/1000]);
+                xdc_apodization(fieldII.receive_aperture,0,rrm_apo);
+                xdc_focus_times(fieldII.receive_aperture,0,rrm_delay);
+
+%                  xdc_center_focus(fieldII.emit_aperture, xmt.scanline_ref_point(lateral_index,:));
+%                  xdc_focus(fieldII.emit_aperture,0,xmt.focus_point(lateral_index,:));
+%                  
+%                  xdc_center_focus(fieldII.receive_aperture, xmt.scanline_ref_point(lateral_index,:));
+%                  xdc_focus(fieldII.receive_aperture,0,xmt.focus_point(lateral_index,:));
+%               
                 [RFdata, tstart] = calc_scat(fieldII.emit_aperture, fieldII.receive_aperture,media.phantom_positions, media.phantom_amplitudes);
         end
         % Compensation for the response length (excitation and impulse response dependent)        
@@ -518,17 +534,12 @@ if(debug == 0)
             case 0
              %   tstart = tstart - xmt.delay_offsets(lateral_index);
             case 1
-%                 tstart = tstart - xmt.delay_offsets(lateral_index)*2;
+                 tstart = tstart - xmt.delay_offsets(lateral_index)*2;
          end
         
         
          
-%          t1 = tstart*fieldII.c/2; 
-%          
-%          x = [t1:1/fieldII.fs*fieldII.c/2:t1+(size(RFdata,1)-1)/fieldII.fs*fieldII.c/2];
-%          [amp,xid] = max(abs(hilbert(RFdata(:,65))));
-%          x(xid)
-%          keyboard
+
          
         % Downsample RF to scPrm.B.bfrcvparams.smpfreq
         if useCaseParams.bfrcvparams(1).smpfreq < fieldII.fs
@@ -538,10 +549,48 @@ if(debug == 0)
         % Remove the rf-mean from each channel
         RFdata = RFdata - repmat(mean(RFdata),size(RFdata,1),1);
 
-        save([savepath 'RF_Data' filesep 'RF_Data_line_nr_' num2str(lateral_index)],...
-            'lateral_index','RFdata','tstart','TransducerDescription','xmt','fieldII','media')
+        switch(field_rcv_focus)
+            case 0
+                save([savepath 'RF_Data' filesep 'RF_Data_line_nr_' num2str(lateral_index)],...
+                    'lateral_index','RFdata','tstart','TransducerDescription','xmt','fieldII','media')
+            case 1
+                s = round(tstart*useCaseParams.bfrcvparams(1).smpfreq)+1;
+                RFdata_temp(s:s+length(RFdata)-1, lateral_index) = RFdata;
+                tstart = 0;
+%                 RFdata_temp(1:length(RFdata), lateral_index) = RFdata;
+                tstart_temp(lateral_index,:) = tstart;
+
+            
+                if(lateral_index == scanlines(end))
+                    RFdata = RFdata_temp;
+                    tstart = tstart_temp;
+                    
+                    str = sprintf('%sFirst_Stage_RF_Data_Beamformed%ssasbsim%sFirst_Stage_RF_Data_Beamformed.mat',savepath,filesep,filesep);
+                
+                    [p,n] = fileparts(str);
+                  
+                    if(isdir([p]))
+                        rmdir([p],'s')
+                        pause(1)
+                    end
+                    mkdir([p])
+                    
+                    save(str,'lateral_index','RFdata','tstart','TransducerDescription','xmt','fieldII','media','useCaseParams')
+                end
+                
+%                 xd = 1:192;
+%                 zd = [0:size(RFdata_temp,1)-1]/useCaseParams.bfrcvparams(1).smpfreq*1540/2;
+%                 figure(1)
+%                 plot(zd,RFdata_temp(:,lateral_index))
+% %                 imagesc(xd,zd,abs(RFdata_temp))
+%                 drawnow
+                
+        end   
+                
+        
     end
 else
+    debug_plot_emissions = 1;
     if(debug_plot_emissions == 1)
         data_receive = xdc_get(fieldII.receive_aperture);
         data_emit = xdc_get(fieldII.emit_aperture);
@@ -558,7 +607,7 @@ else
             apo_temp = trm_apo(trm_apo ~= 0);
             apo_temp = abs(apo_temp./max(apo_temp)-1);
             if(max(apo_temp) ~= 0)
-                apo_temp = apo_temp./max(apo_temp)*xmt.focus;
+                apo_temp = apo_temp./max(apo_temp)*xmt.focus(1);
             end
 
             clf

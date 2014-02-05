@@ -1,4 +1,4 @@
-%% INIT
+% %% INIT
 % clc
 % clear all
 % close all
@@ -8,11 +8,10 @@ base_path = './';
 loadpath = './';
 base_path_usecase = './';
 
-
-%addpath(genpath(fullfile(base_path,'Matlab code','Toolbox','Display_functions')))
-addpath(genpath(fullfile(base_path,'Scripts')))
+addpath(['./Scripts'])
 addpath(['./Scripts/Field'])
-addpath(genpath(fullfile(base_path,'Scripts','bft3-beta-1-24','src')))
+addpath(['./Scripts/ScanConvert'])
+addpath(['./Scripts/bft3-beta-1-19/src'])
 
 
 usecase_filename = 'Pre_SASB_liver_2_1_p';
@@ -26,10 +25,10 @@ savepath_figures = './';
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 useCaseParams = Read_Usecase(fullfile(base_path_usecase,[usecase_filename '.dat']));
 useCaseParams.bfrcvparams(1) = useCaseParams.bfrcvparams(11);
-
+%%
 
 useCaseParams.scanparams(1).SubAppertureSize = 1;
-useCaseParams.scanparams(1).scantype = 0;
+useCaseParams.scanparams(1).scantype = 0; % 1d array imaging
 
 transducerType = '8820e';
 
@@ -39,9 +38,9 @@ useCaseParams.acmodparams(1).layerthickness3 = 0;
      
 
 useCaseParams.bfxmitparams(1).xmitfnum = 2;
-useCaseParams.bfxmitparams(1).xmitapodishape = 1;
-useCaseParams.bfxmitparams(1).xmitapodigausswidth = 0.2;
-useCaseParams.bfxmitparams(1).xmitfocus = 0.04;
+useCaseParams.bfxmitparams(1).xmitapodishape = 0; % 0 boxcar,1 hamming, 2 gauss
+useCaseParams.bfxmitparams(1).xmitapodigausswidth = 0.2; 
+useCaseParams.bfxmitparams(1).xmitfocus = 0.07;
 
 
 %  Set the impulse response and excitation
@@ -59,7 +58,9 @@ excitation = excitation.*hanning(max(size(excitation)));
 sca_x = ([ 0  0  0  0  0  0  0  0  0]./1000)';
 sca_y = ([zeros(size(sca_x,1),1)]./1000);
 sca_z = ([15 25 35 45 55 65 75 85 95]./1000)';
-
+% sca_x = 0;
+% sca_y = 0;
+% sca_z = 0.05;
 media.phantom_positions = [sca_x sca_y sca_z];
 media.phantom_amplitudes = ones(size(media.phantom_positions,1),1);
 
@@ -82,10 +83,13 @@ Data_AcquisitionVer3('usecaseparams',useCaseParams, ...
                       'media',media)
 
 end
-      return
+     
+
+
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Define second stage beamforming parameters And view parameters
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 useCaseParams.bfrcvparams(1).rcvfnum = useCaseParams.bfxmitparams(1).xmitfnum;
 useCaseParams.bfrcvparams(1).rcvapodishape = 1;
@@ -99,23 +103,22 @@ useCaseParams.scanparams(1).startlinenumq = 0;
 useCaseParams.scanparams(1).stoplinenumq = 268;
 
 useCaseParams.scanparams(1).scanareadscr.startlineorigin.y = 0;
-useCaseParams.scanparams(1).scanareadscr.startlineorigin.x = 0;
-useCaseParams.scanparams(1).scanareadscr.startlineangle = pi/2-30/180*pi;
+useCaseParams.scanparams(1).scanareadscr.startlineorigin.x = 0.04;
+useCaseParams.scanparams(1).scanareadscr.startlineangle = pi/2;
 
 useCaseParams.scanparams(1).scanareadscr.stoplineorigin.y = 0;
-useCaseParams.scanparams(1).scanareadscr.stoplineorigin.x = 0;
-useCaseParams.scanparams(1).scanareadscr.stoplineangle =  pi/2+30/180*pi;
+useCaseParams.scanparams(1).scanareadscr.stoplineorigin.x = -0.04;
+useCaseParams.scanparams(1).scanareadscr.stoplineangle =  pi/2;
 
-useCaseParams.scanparams(1).steeringangle = 0;
-useCaseParams.scanparams(1).phasedangle = 30/180*pi;
-
+%useCaseParams.scanparams(1).steeringangle = 0;
+%useCaseParams.scanparams(1).phasedangle = 30/180*pi;
+% 
 % View parameters - included here because they must be saved with usecase
 useCaseParams.scanparams(1).windowtissueq.x_tismin = -0.04;
 useCaseParams.scanparams(1).windowtissueq.y_tismin = 0;                
 useCaseParams.scanparams(1).windowtissueq.x_tismax = 0.04;
-useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.12;
+useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.10;
 useCaseParams.scanparams(1).scantype = 2;
-useCaseParams.bfrcvparams(1).smpfreq = 30e6;
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Define second stage beamforming parameters And view parameters
@@ -135,8 +138,38 @@ toc
 % % Plot
 %% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+fig_nr = 1;
+type = 'psf';
+switch(type)
+    case{'psf'}
+        compression = 'Linear';
+        dynamic_range = 60;
+    case{'B-mode'}
+        compression = 'BK_muLaw_RTSC_VP_DRC_SEL_0';
+        dynamic_range = 100;
+end
+clf(figure(fig_nr))
+plot_obj_sasb_2 = Plot_Beamformed_Data_Ver2(...
+        'figure nr', fig_nr, ...
+        'data type','simulation',...
+        'type of beamformation', 'sasb',...
+        'stage','first',...
+        'show tgc','dont show tgc',...
+        'loadpath',[savepath ],...
+        'gain',[],...
+        'windowtissueq',useCaseParams.scanparams(1).windowtissueq,...
+        'compression',compression,...
+        'dynamic range',dynamic_range); 
+axis image   
+drawnow
+caxis([-60 0])
+set(gcf,'position',[  939   100   735   885])
+set(gca,'position',[ 80    70   640   800])
+drawnow
+
+%% second
 fig_nr = 8;
-type = 'B-mode';
+type = 'psf';
 switch(type)
     case{'psf'}
         compression = 'Linear';
@@ -146,7 +179,7 @@ switch(type)
         dynamic_range = 100;
 end
 plot_obj_sasb_2 = Plot_Beamformed_Data_Ver2(...
-        'figure nr', 3, ...
+        'figure nr', 2, ...
         'data type','simulation',...
         'type of beamformation', 'sasb',...
         'stage','second',...
@@ -157,12 +190,9 @@ plot_obj_sasb_2 = Plot_Beamformed_Data_Ver2(...
         'compression',compression,...
         'dynamic range',dynamic_range); 
     
-    
-set(gcf,'position',[1922         506         560         420])
+axis image   
 drawnow
-axis image
 caxis([-60 0])
-
-
-
-
+set(gcf,'position',[  939   100   735   885])
+set(gca,'position',[ 80    70   640   800])
+drawnow

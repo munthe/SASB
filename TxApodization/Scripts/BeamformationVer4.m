@@ -208,12 +208,7 @@ switch(lower(type))
         [rcv.scanline_ref_point rcv.scanline_direction rcv.scanline_angle] = calc_scanline_position(useCaseParams);
         rcv.no_lines = size(rcv.scanline_ref_point,1);
         
-%         
-% figure(101)
-% plot3(rcv.scanline_ref_point(:,1),rcv.scanline_ref_point(:,2), rcv.scanline_ref_point(:,3),'.')
-% hold on
-% 
-% plot3(rcv.focus_point(:,1),rcv.focus_point(:,2), rcv.focus_point(:,3),'bx')
+        
 
 
 
@@ -300,6 +295,14 @@ end
 
 switch(lower(type))
     case {'sasb first stage','srf'}
+         TransducerDescription = transducer('id','8820e',...
+                           'aclayerthickness',useCaseParams.acmodparams(1).layerthickness1 + ...
+                                              useCaseParams.acmodparams(1).layerthickness2 + ...
+                                              useCaseParams.acmodparams(1).layerthickness3,...
+                           'ROC',useCaseParams.acmodparams(1).shellradius,...
+                           'nr_elements_x',useCaseParams.acmodparams(1).elements,...
+                           'elevation_focus',0.08); 
+                       
         rcv_aperture = bft3_aperture('pos',TransducerDescription.element_positions);
         emit_aperture = bft3_aperture('pos',TransducerDescription.element_positions);
         
@@ -556,7 +559,7 @@ switch(lower(type))
 %             plot3(xmt.focus_point(:,1),xmt.focus_point(:,2),xmt.focus_point(:,3),'.')
 %             hold on, plot3(xmt.scanline_ref_point(:,1),xmt.scanline_ref_point(:,2),xmt.scanline_ref_point(:,3),'.r')
 %             plot3(bft3.line.origin(:,1),bft3.line.origin(:,2),bft3.line.origin(:,3),'.k')
-            
+%             
 
 
 

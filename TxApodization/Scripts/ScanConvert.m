@@ -57,17 +57,9 @@ function [frame, WindowTissueX , WindowTissueY] = ScanConvert(RF,StartLineX, Sta
 
 if(StopLineAngle == StartLineAngle)
     type = 'linear';
-%     type = '2D_C_SCAN_plane';
 else
     type = 'sector';
 end
-
-if(StopLineX == 0 & StopLineY == 0 & StartLineX == 0 & StartLineY == 0)
-%      type = '2D_C_SCAN_radius';
-end
-
-
-
 switch(nargin)
     case 13
         plott = 0;
@@ -77,119 +69,7 @@ switch(nargin)
         return;
 end
 
-
-
 switch(type)
-    case '2D_C_SCAN_radius'
-        % delta angle
-        d_angle_ind = (StopLineAngle-StartLineAngle)/(size(RF,1)-1);
-        d_angle_out_x = (WindowTissueXMax-WindowTissueXMin)/399;
-        d_angle_out_y = (WindowTissueYMax-WindowTissueYMin)/399;
-        
-        
-        WindowTissueX = repmat([WindowTissueXMin:...
-                                 d_angle_out_x:...
-                                 WindowTissueXMax],400,1);
-                             
-        WindowTissueY = repmat([WindowTissueYMin:...
-                                d_angle_out_y:...
-                                WindowTissueYMax]',1,400);
-        
-        
-
-        
-        ScanAreaX = repmat([StartLineAngle:...
-                            d_angle_ind:...
-                            StopLineAngle],size(RF,1),1);
-        ScanAreaY = repmat([StartLineAngle:...
-                            d_angle_ind:...
-                            StopLineAngle]',1,size(RF,1));
-         
-        
-        
-        frame = interp2(ScanAreaX,ScanAreaY,...
-                 RF,WindowTissueX,WindowTissueY,'spline');  
-           
-%         
-%         frame(WindowTissueX > ScanAreaX(1,1)) = NaN;
-%         frame(WindowTissueX < ScanAreaX(end,end)) = NaN;
-% 
-%         frame(WindowTissueY < ScanAreaY(1,1)) = NaN;
-%         frame(WindowTissueY > ScanAreaY(end,end)) = NaN;
-%                
-        WindowTissueX = WindowTissueX(1,:);
-        WindowTissueY = WindowTissueY(:,1);
-        
-% 
-        index_x = WindowTissueX >= WindowTissueXMin & ...
-                    WindowTissueX <= WindowTissueXMax;
-        index_y = WindowTissueY >= WindowTissueYMin & ...
-                    WindowTissueY <= WindowTissueYMax;
-
-        WindowTissueX = WindowTissueX(index_x);
-        WindowTissueY = WindowTissueY(index_y);
-        
-        frame = round(frame(index_y,index_x));
-
-        frame(isnan(frame)) = 0;
-%         
-        
-    case '2D_C_SCAN_plane'
-        % delta angle
-        d_step_ind_x = (StopLineX-StartLineX)/(size(RF,1)-1);
-        d_step_ind_y = (StopLineY-StartLineY)/(size(RF,2)-1);
-        d_step_out_x = (WindowTissueXMax-WindowTissueXMin)/399;
-        d_step_out_y = (WindowTissueYMax-WindowTissueYMin)/399;
-        
-        
-        WindowTissueX = repmat([WindowTissueXMin:...
-                                 d_step_out_x:...
-                                 WindowTissueXMax],400,1);
-                             
-        WindowTissueY = repmat([WindowTissueYMin:...
-                                d_step_out_y:...
-                                WindowTissueYMax]',1,400);
-        
-        
-
-        
-        ScanAreaX = repmat([StartLineX:...
-                            d_step_ind_x:...
-                            StopLineX],size(RF,1),1);
-        ScanAreaY = repmat([StartLineY:...
-                            d_step_ind_y:...
-                            StopLineY]',1,size(RF,2));
-         
-        
-        
-        frame = interp2(ScanAreaX,ScanAreaY,...
-                 RF,WindowTissueX,WindowTissueY,'spline');  
-           
-%         
-%         frame(WindowTissueX > ScanAreaX(1,1)) = NaN;
-%         frame(WindowTissueX < ScanAreaX(end,end)) = NaN;
-% 
-%         frame(WindowTissueY < ScanAreaY(1,1)) = NaN;
-%         frame(WindowTissueY > ScanAreaY(end,end)) = NaN;
-%                
-        WindowTissueX = WindowTissueX(1,:);
-        WindowTissueY = WindowTissueY(:,1);
-        
-% 
-        index_x = WindowTissueX >= WindowTissueXMin & ...
-                    WindowTissueX <= WindowTissueXMax;
-        index_y = WindowTissueY >= WindowTissueYMin & ...
-                    WindowTissueY <= WindowTissueYMax;
-
-        WindowTissueX = WindowTissueX(index_x);
-        WindowTissueY = WindowTissueY(index_y);
-        
-        frame = round(frame(index_y,index_x));
-
-        frame(isnan(frame)) = 0;
-%         
-        
-            
     case 'linear'
         ScreenPixelsPerInch = get(0,'ScreenPixelsPerInch');
         ScreenPixelsPerCentimeter = ScreenPixelsPerInch/2.54;

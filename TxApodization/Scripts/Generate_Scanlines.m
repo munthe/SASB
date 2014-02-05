@@ -227,8 +227,8 @@ x0 = transducerParams.element_positions;
 % title('Error','fontsize',16)
 
 % old version - do not delete
- rcv.dist_scanline_to_elements = zeros(rcv.no_lines,useCaseParams.acmodparams(1).elements);
-%rcv.dist_scanline_to_elements = zeros(rcv.no_lines,useCaseParams.acmodparams(1).elements);
+%  rcv.dist_scanline_to_elements = zeros(rcv.no_lines,useCaseParams.acmodparams(1).elements^2);
+rcv.dist_scanline_to_elements = zeros(rcv.no_lines,useCaseParams.acmodparams(1).elements);
 for k = 1:rcv.no_lines
     % http://www.mathworks.se/support/solutions/en/data/1-1BYSR/
     x1 = rcv.focus_point(k,:);
@@ -334,7 +334,7 @@ end
 %%
 if(debug == 1)
     figure
-    for k = 1:96%:rcv.no_lines % only works as a sweeping function for plotting
+    for k = 1:rcv.no_lines % only works as a sweeping function for plotting
         if(k == 1) % draw all elements
             transducerParams.plot_elements;
             hold on
@@ -354,16 +354,16 @@ if(debug == 1)
         else       % color the elements that is not active blue
             transducerParams.plot_elements(find((rcv.valid(k,:) == 0 & rcv.valid(k-1,:) == 1) == 1),[0 0 1],'');
             % plot focus points
-            set(focus_point_plot,'XData',rcv.focus_point(k,1))
-            set(focus_point_plot,'YData',rcv.focus_point(k,3))
+            set(focus_point_plot,'XData',rcv.focus_point(k,1)*1000)
+            set(focus_point_plot,'YData',rcv.focus_point(k,3)*1000)
             % plot valid elements
             transducerParams.plot_elements(find((rcv.valid(k,:) == 1 & rcv.valid(k-1,:) == 0) == 1),[1 0 0],'');
             % plot ref point
-            set(ref_point_plot,'XData',rcv.scanline_ref_point(k,1))
-            set(ref_point_plot,'YData',rcv.scanline_ref_point(k,3))
+            set(ref_point_plot,'XData',rcv.scanline_ref_point(k,1)*1000)
+            set(ref_point_plot,'YData',rcv.scanline_ref_point(k,3)*1000)
             % plot scan lines
-            set(scan_line_plot,'XData',[rcv.scanline_ref_point(k,1) rcv.focus_point(k,1)])
-            set(scan_line_plot,'YData',[rcv.scanline_ref_point(k,3) rcv.focus_point(k,3)])
+            set(scan_line_plot,'XData',[rcv.scanline_ref_point(k,1) rcv.focus_point(k,1)]*1000)
+            set(scan_line_plot,'YData',[rcv.scanline_ref_point(k,3) rcv.focus_point(k,3)]*1000)
            
         end
         

@@ -1,0 +1,94 @@
+beta 1.19
+ Form, Fit and Function:
+  - Introduced 2D aperture setup
+ Bugs fixed:
+  - No clever tricks are made to not beamform points which no RF data can affect.
+ Known bugs:
+beta 1.17
+ Form, Fit and Function:
+  - Apodization is now calculated using an orientation property on the
+    transmit aperture to make transmit apodization symmetric around
+    center of beam
+ Bugs fixed:
+ Known bugs:
+beta 1.16
+ - DO NOT USE THIS RELEASE
+ Form, Fit and Function:
+  - Manual apodization changed into parametric
+ Bugs fixed:
+ Known bugs:
+beta 1.13
+ Form, Fit and Function:
+ Bugs fixed:
+  - Tukey window fixed
+ Known bugs:
+  - Cubic interpolation incorrect (nearest, linear and spline works)
+  - When beamforming using SA, the first relevant point on a line are
+    computed using tstart. This is done incorrectly, a work-around is
+    to put a scatterer close to the aperture.
+beta 1.12
+ Form, Fit and Function:
+ Bugs fixed:
+  - Annoying warning removed when setting orientation of apodizations
+ Known bugs:
+  - Tukey window is not working correctly, should produce Hann window for
+    window parameter R equal to 0 and Rectwin (for R=1).
+  - Cannot reset positions for transducers, remove ,data in set.pos function
+  - Sign error for z-coordinate on 'convex_array' transducers
+beta 1.9
+ Form, Fit and Function:
+  - Focus delays can now be acquired for convex transducers
+  - Apodizations can now be assigned lines and afterwards, apodization
+    values can be extracted
+ Bugs fixed:
+  - Parametric apodization using manual=true now works for line samples
+    of arbitrary length
+  - Plane-wave have been fixed to produce correct output
+
+beta 1.4
+ Form, Fit and Function:
+  - The first version of a user guide is included
+ Bugs fixed:
+ Known bugs:
+  - Parametric apodization using manual=true only works for line samples
+    of length c/(2*fs)
+beta 0.7
+ Form, Fit and Function:
+  - Plane-parallel wave support. Enabled ppwave on aperture. If enabled, the
+	time-of-flights are calculated from the plane containing
+	center_focus and perpendicular to orientation on apodization to
+	the focus points. If focus is set (VS), the plane contains the
+	focus (VS) and the distance to the focus points are either added
+	or subtracted, similar to beamforming using a virtual source. This
+	applies to both transmit and receive so for an ordinary plane-wave
+	setup only the ppwave property should be enabled on the transmit
+	aperture.
+ Bugs fixed:
+  - Delays on aperture are now in seconds rather than samples.
+ Known bugs:
+  - Parametric apodization using manual=true only works for line samples
+    of length c/(2*fs)
+beta 0.6
+ Form, Fit and Function:
+  - Added posibility for creating multiple lines at a time
+  - Compounding multiple angles at a time using bft3_sampled_image
+ Bugs fixed:
+ Known bugs:
+  - Delays are not working
+beta 0.5
+ Form, Fit and Function:
+  - Additional parameter for off-setting dynamic apodization weights
+ Bugs fixed:
+ Known bugs:
+
+beta 0.4
+ Form, Fit and Function:
+  - Apodization using distances and values are now referred to as 'manual'
+  - Fixed apodization introduced for SampledImages specified by a number
+	of active elements, a window, and possibly a window parameter.
+  - Possibility to save an Aperture object by converting it to a struct and
+	constructing the object again using this struct.
+ Bugs fixed:
+  - Supplying wrong arguments to Image constructor no longer gives AV
+  - Memory leak introduced in beta 0.1
+ Known bugs:

@@ -128,10 +128,6 @@ else
     end
 end
 
-% temp hack
-% useCaseParams.scanparams(1).scanareadscr.startlineangle = pi/2-30/180*pi;
-% useCaseParams.scanparams(1).scanareadscr.stoplineangle =  pi/2+30/180*pi;
-
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                       Parse view                                      %%
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -159,7 +155,7 @@ RFdata(isnan(RFdata)) = 0;
 % for km = 1:1:405
 useCaseParams.scanparams(1).scantype  = 10;
 if(isreal(RFdata))
-    if(useCaseParams.scanparams.scantype == 1)
+    if(useCaseParams.scanparams(1).scantype == 1)
         Data_env = RFdata;
     else
         Data_env = abs(hilbert(RFdata));
@@ -307,12 +303,12 @@ try
 
 
 [frame, WindowTissueX , WindowTissueY] = ScanConvert(((Data_lg./db_range)+1).*2^16,...           % Data
-    useCaseParams.scanparams(1).scanareadscr.startlineorigin.y,...           % StartLineX
-    useCaseParams.scanparams(1).scanareadscr.startlineorigin.x,...           % StartLineY
+    useCaseParams.scanparams(1).scanareadscr.startlineorigin.x,...           % StartLineX
+    useCaseParams.scanparams(1).scanareadscr.startlineorigin.y,...           % StartLineY
     useCaseParams.scanparams(1).scanareadscr.startlineangle,...              % StartLineAngle
     useCaseParams.scanparams(1).startdepthq,...                  % StartDepth 
-    useCaseParams.scanparams(1).scanareadscr.stoplineorigin.y,...            % StopLineX
-    useCaseParams.scanparams(1).scanareadscr.stoplineorigin.x,...            % StopLineY
+    useCaseParams.scanparams(1).scanareadscr.stoplineorigin.x,...            % StopLineX
+    useCaseParams.scanparams(1).scanareadscr.stoplineorigin.y,...            % StopLineY
     useCaseParams.scanparams(1).scanareadscr.stoplineangle,...               % StopLineAngle
     useCaseParams.scanparams(1).startdepthq+line.length_lines,...% StopDepth
     useCaseParams.scanparams(1).windowtissueq.x_tismin,...                   % WindowTissueXMin 
