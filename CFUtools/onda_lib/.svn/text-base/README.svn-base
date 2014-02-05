@@ -1,0 +1,20 @@
+The source code can be compiled by running run_me.sh
+run_me.sh assumes that MATLAB is installed at: /usr/local/matalb2010b_64bit
+In Ubuntu the prerequisites to run run_me.sh should be covered by installing/running:
+sudo apt-get install build-essential automake cmake libcppunit-dev g++
+
+
+
+To manually compile the software run:
+
+# Generate configure script
+aclocal -I /usr/share/aclocal -I./config
+autoheader
+automake --add-missing
+autoconf
+
+# Configure and tell where MATLAB is located
+./configure --with-matlab=<path to MATLAB>
+
+# Compile
+make

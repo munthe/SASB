@@ -1,0 +1,59 @@
+\documentclass[a4paper,english,widepage]{memoir}
+\usepackage{CFUpackages}
+\usepackage{CFUlayout}
+
+
+\title{Onda Connection Library\\Source Code} % the document title
+\author{Morten~Fischer~Rasmussen}
+
+
+% --------------------- end of the preamble ---------------------------
+
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+%\chapter{Introduction}
+
+
+
+\chapter{MATLAB routines}
+
+\section{Connection}
+\lstinputlisting[language=matlab,caption=onda\_initialize.m]{../src/onda_initialize.m}
+\lstinputlisting[language=matlab,caption=onda\_terminate.m]{../src/onda_terminate.m}
+\newpage
+
+\section{Movement}
+\lstinputlisting[language=matlab,caption=onda\_move\_absolute.m]{../src/onda_move_absolute.m}
+\lstinputlisting[language=matlab,caption=onda\_move\_relative.m]{../src/onda_move_relative.m}
+\lstinputlisting[language=matlab,caption=onda\_set\_position.m]{../src/onda_set_position.m}
+\lstinputlisting[language=matlab,caption=onda\_get\_position.m]{../src/onda_get_position.m}
+\newpage
+
+\section{Movement}
+\lstinputlisting[language=matlab,caption=onda\_set\_high\_limit.m]{../src/onda_set_high_limit.m}
+\lstinputlisting[language=matlab,caption=onda\_get\_high\_limit.m]{../src/onda_get_high_limit.m}
+\lstinputlisting[language=matlab,caption=onda\_set\_low\_limit.m]{../src/onda_set_low_limit.m}
+\lstinputlisting[language=matlab,caption=onda\_get\_low\_limit.m]{../src/onda_get_low_limit.m}
+
+
+
+
+\chapter{C++ Library}
+\section{onda\_lib}
+\lstinputlisting[language=C++,caption=err\_printf.h]{../include/err_printf.h}
+\lstinputlisting[language=C++,caption=onda\_positioner.h]{../include/onda_positioner.h}
+\lstinputlisting[language=C++,caption=onda\_lib.cpp]{../src/onda_lib.cpp}
+\newpage
+
+
+\section{TCP connection}
+\lstinputlisting[language=C++,caption=tcp.h]{../include/tcp.h}
+\lstinputlisting[language=C++,caption=tcp.cpp]{../src/tcp.cpp}
+
+
+
+\end{document}
