@@ -44,12 +44,14 @@ switch(mode)
         fnum_mode = 'rcvfnum';
         apodshape_mode = 'rcvapodishape';
         apodigausswidth_mode = 'rcvapodigausswidth';
+        apolevels_mode = 'rcvapodilevels'
     case{'transmit','xmt'}
         mode = 'bfxmitparams';
         focus_mode = 'xmitfocus';
         fnum_mode = 'xmitfnum';    
         apodshape_mode = 'xmitapodishape';
         apodigausswidth_mode = 'xmitapodigausswidth';
+        apolevels_mode = 'xmitapodilevels'
 end
 % calculate nr of lines
 
@@ -311,7 +313,11 @@ for k = 1:rcv.no_lines
     n = rcv.dist_scanline_to_elements(k,rcv.valid(k,:)==1)./(Width_desired(k))+0.5;
     rcv.apo(k,rcv.valid(k,:)==1) = apod_fun(n,useCaseParams.(mode)(1).(apodigausswidth_mode));
 end
-        
+% Quantization of the apodization
+if useCaseParams.bfxmitparams(1).(apolevels_mode) >= 2
+    rcv.apo = quantization(rcv.apo,useCaseParams.bfxmitparams(1).(apolevels_mode));
+end
+     
 switch(dyn_focus)
     case{'disabled'}
         % calculate time delays
