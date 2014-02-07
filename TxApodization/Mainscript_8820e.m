@@ -15,15 +15,21 @@ addpath(['./Scripts/bft3-beta-1-19/src'])
 usecase_filename = 'Pre_SASB_liver_2_1_p';
 
 savepath = loadpath;
-savepath_figures = './';
-
+savepath_figures = '../Figures/';
+figure_format = '-dpng'
 
 %% Loop through different settings
+setupDesc = { ...
+    'Apo Linspace 16'; ...
+    'Apo Linspace 8'; ...
+    };
 apodizations = [ ...
-    linspace(0,1,16); ...
+linspace(0,1,16); ...
     linspace(0,1,8),zeros(1,8); ...
     ];
 
+setting = 1;
+%%
 for setting = 1:size(apodizations,1) %rest of script
     
 
@@ -100,7 +106,7 @@ useCaseParams.scanparams(1).startdepthq = 0.0;
 useCaseParams.scanparams(1).stopdepthq = 0.12;
 
 useCaseParams.scanparams(1).startlinenumq = 0;
-useCaseParams.scanparams(1).stoplinenumq = 50; % 269;
+useCaseParams.scanparams(1).stoplinenumq = 268;
 
 useCaseParams.scanparams(1).scanareadscr.startlineorigin.y = 0;
 useCaseParams.scanparams(1).scanareadscr.startlineorigin.x = 0.04;
@@ -155,17 +161,19 @@ plot_obj_sasb_2 = Plot_Beamformed_Data_Ver2(...
         'gain',[],...
         'windowtissueq',useCaseParams.scanparams(1).windowtissueq,...
         'compression',compression,...
-        'dynamic range',dynamic_range); 
-axis image   
+        'dynamic range',dynamic_range);
+axis image
 drawnow
 caxis([-60 0])
 set(gcf,'position',[  939   100   735   885])
 set(gca,'position',[ 80    70   640   800])
 drawnow
+print(figure(fig_nr),strcat(savepath_figures,'FirstStage_',setupDesc{setting}),figure_format)
+
 
 %% Plot second stage image
 
-fig_nr = 8;
+fig_nr = 2;
 type = 'psf';
 switch(type)
     case{'psf'}
@@ -193,6 +201,6 @@ caxis([-60 0])
 set(gcf,'position',[  939   100   735   885])
 set(gca,'position',[ 80    70   640   800])
 drawnow
-
+print(figure(fig_nr),strcat(savepath_figures,'SecondStage_',setupDesc{setting}),figure_format)
 
 end
