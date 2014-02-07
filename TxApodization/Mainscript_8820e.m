@@ -18,7 +18,16 @@ savepath = loadpath;
 savepath_figures = '../Figures/';
 figure_format = '-dpng';
 
+%% CFUtools for measuring
 CFUtools_init % init CFUtools
+rect = [-40*ones(1,9); 10:10:90; 80*ones(1,9); 10*ones(1,9)]';
+
+%% Generate scatter field
+sca_x = ([ 0  0  0  0  0  0  0  0  0]./1000)';
+sca_y = ([zeros(size(sca_x,1),1)]./1000);
+sca_z = ([15 25 35 45 55 65 75 85 95]./1000)';
+media.phantom_positions = [sca_x sca_y sca_z];
+media.phantom_amplitudes = ones(size(media.phantom_positions,1),1);
 
 %% Loop through different settings
 exp = [0,2.^[0:14]];
@@ -55,17 +64,6 @@ for setting = 1:size(apodizations,1) %rest of script
 %% Read useCase file
 useCaseParams = Read_Usecase(fullfile(base_path_usecase,[usecase_filename '.dat']));
 useCaseParams.bfrcvparams(1) = useCaseParams.bfrcvparams(11);
-
-%% Generate scatter field
-
-sca_x = ([ 0  0  0  0  0  0  0  0  0]./1000)';
-sca_y = ([zeros(size(sca_x,1),1)]./1000);
-sca_z = ([15 25 35 45 55 65 75 85 95]./1000)';
-% sca_x = 0;
-% sca_y = 0;
-% sca_z = 0.05;
-media.phantom_positions = [sca_x sca_y sca_z];
-media.phantom_amplitudes = ones(size(media.phantom_positions,1),1);
 
 %% Redefine transmit parameter
 
@@ -223,8 +221,12 @@ caxis([-60 0])
 set(gcf,'position',[  939   100   735   885])
 set(gca,'position',[ 80    70   640   800])
 drawnow
-psf = cfu_get_psf_metrics('script',1,'fh',figure(fig_nr),'rect',[-40 10 80 10]);
-psf
+psf = cfu_get_psf_metrics('script',1,'fh',figure(fig_nr),'rect',rect(1,:));
+text(rect(1,1),rect(1,2),...
+    {['FWHM ' num2str(psf.fwhm_x) ' ' num2str(psf.fwhm_y)];...
+        ['Radius 20dB ' num2str(psf.radius20dB)]},...
+    'Color','red','FontSize',14,'VerticalAlignment','top');
+drawnow
 print(figure(fig_nr),[savepath_figures 'SecondStage ' setupDesc],figure_format)
 
 end
