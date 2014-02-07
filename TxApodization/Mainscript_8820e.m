@@ -17,6 +17,17 @@ usecase_filename = 'Pre_SASB_liver_2_1_p';
 savepath = loadpath;
 savepath_figures = './';
 
+
+%% Loop through different settings
+apodizations = [ ...
+    linspace(0,1,16); ...
+    linspace(0,1,8),zeros(1,8); ...
+    ];
+
+for setting = 1:size(apodizations,1) %rest of script
+    
+
+
 %% Read useCase file
 useCaseParams = Read_Usecase(fullfile(base_path_usecase,[usecase_filename '.dat']));
 useCaseParams.bfrcvparams(1) = useCaseParams.bfrcvparams(11);
@@ -51,7 +62,7 @@ useCaseParams.bfxmitparams(1).xmitapodigausswidth = 0.7;
 useCaseParams.bfxmitparams(1).xmitfocus = 0.02;
 % quantization of apodization round of to levels in vector, if empty not
 % rounding
-useCaseParams.bfxmitparams(1).xmitapodilevels = [];
+useCaseParams.bfxmitparams(1).xmitapodilevels = apodizations(setting,:);
 
 %% Set the impulse response and excitation
 
@@ -89,7 +100,7 @@ useCaseParams.scanparams(1).startdepthq = 0.0;
 useCaseParams.scanparams(1).stopdepthq = 0.12;
 
 useCaseParams.scanparams(1).startlinenumq = 0;
-useCaseParams.scanparams(1).stoplinenumq = 269;
+useCaseParams.scanparams(1).stoplinenumq = 50; % 269;
 
 useCaseParams.scanparams(1).scanareadscr.startlineorigin.y = 0;
 useCaseParams.scanparams(1).scanareadscr.startlineorigin.x = 0.04;
@@ -182,3 +193,6 @@ caxis([-60 0])
 set(gcf,'position',[  939   100   735   885])
 set(gca,'position',[ 80    70   640   800])
 drawnow
+
+
+end

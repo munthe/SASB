@@ -1,4 +1,4 @@
-% Function to quantize the apodization vector
+% Function for quantization of the apodization vector
 %
 % Inputs:
 % Matrix to be quantized
@@ -7,7 +7,7 @@
 % Outputs:
 % Quantized matrix
 
-function [quantized] = quantize(matrix,levels)
+function [quantized] = quantization(matrix,levels)
 quantized = zeros(size(matrix));
 for i = 1:length(levels)-1;
     % Mid value for rounding
