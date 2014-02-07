@@ -18,6 +18,8 @@ savepath = loadpath;
 savepath_figures = '../Figures/';
 figure_format = '-dpng';
 
+CFUtools_init % init CFUtools
+
 %% Loop through different settings
 exp = [0,2.^[0:14]];
 % apoDesc = { ...
@@ -122,7 +124,7 @@ useCaseParams.scanparams(1).startdepthq = 0.0;
 useCaseParams.scanparams(1).stopdepthq = 0.12;
 
 useCaseParams.scanparams(1).startlinenumq = 0;
-useCaseParams.scanparams(1).stoplinenumq = 268;
+useCaseParams.scanparams(1).stoplinenumq = 50;%268;
 
 useCaseParams.scanparams(1).scanareadscr.startlineorigin.y = 0;
 useCaseParams.scanparams(1).scanareadscr.startlineorigin.x = 0.04;
@@ -221,6 +223,8 @@ caxis([-60 0])
 set(gcf,'position',[  939   100   735   885])
 set(gca,'position',[ 80    70   640   800])
 drawnow
+psf = cfu_get_psf_metrics('script',1,'fh',figure(fig_nr),'rect',[-40 10 80 10]);
+psf
 print(figure(fig_nr),[savepath_figures 'SecondStage ' setupDesc],figure_format)
 
 end
