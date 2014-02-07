@@ -1,8 +1,7 @@
-% %% INIT
+%% INIT
 % clc
 % clear all
 % close all
-
 
 base_path = './';
 loadpath = './';
@@ -13,47 +12,15 @@ addpath(['./Scripts/Field'])
 addpath(['./Scripts/ScanConvert'])
 addpath(['./Scripts/bft3-beta-1-19/src'])
 
-
 usecase_filename = 'Pre_SASB_liver_2_1_p';
 
 savepath = loadpath;
 savepath_figures = './';
 
-
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Define Transmit parameters
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Read useCase file
 useCaseParams = Read_Usecase(fullfile(base_path_usecase,[usecase_filename '.dat']));
 useCaseParams.bfrcvparams(1) = useCaseParams.bfrcvparams(11);
-%%
 
-useCaseParams.scanparams(1).SubAppertureSize = 1;
-useCaseParams.scanparams(1).scantype = 0; % 1d array imaging
-
-transducerType = '8820e';
-
-useCaseParams.acmodparams(1).layerthickness1 = 0;
-useCaseParams.acmodparams(1).layerthickness2 = 0;
-useCaseParams.acmodparams(1).layerthickness3 = 0;
-     
-
-useCaseParams.bfxmitparams(1).xmitfnum = 1;
-useCaseParams.bfxmitparams(1).xmitapodishape = 1; % 0 boxcar,1 hamming, 2 gauss
-useCaseParams.bfxmitparams(1).xmitapodigausswidth = 0.7; 
-useCaseParams.bfxmitparams(1).xmitfocus = 0.02;
-useCaseParams.bfxmitparams(1).xmitapodilevels = [];
-
-
-%  Set the impulse response and excitation
-f0 = 3e6;
-fs = 120e6;
-xmt_impulse_response = sin(2*pi*f0*(0:1/fs:2/f0))';
-xmt_impulse_response = xmt_impulse_response.*hanning(max(size(xmt_impulse_response)));
-rcv_impulse_response = xmt_impulse_response;
-
-excitation = (sin(2*pi*f0*(0:1/fs:2/f0)))';
-excitation = excitation.*hanning(max(size(excitation)));
-                                    
 %% Generate scatter field
 
 sca_x = ([ 0  0  0  0  0  0  0  0  0]./1000)';
@@ -65,12 +32,40 @@ sca_z = ([15 25 35 45 55 65 75 85 95]./1000)';
 media.phantom_positions = [sca_x sca_y sca_z];
 media.phantom_amplitudes = ones(size(media.phantom_positions,1),1);
 
+%% Redefine transmit parameter
 
-%%
+useCaseParams.scanparams(1).SubAppertureSize = 1;
+useCaseParams.scanparams(1).scantype = 0; % 1d array imaging
 
-%% Generate Data
-create_data = 1;
-if(create_data == 1)    
+transducerType = '8820e';
+
+% Matching layer not important for simulation, set to zero
+useCaseParams.acmodparams(1).layerthickness1 = 0;
+useCaseParams.acmodparams(1).layerthickness2 = 0;
+useCaseParams.acmodparams(1).layerthickness3 = 0;
+
+useCaseParams.bfxmitparams(1).xmitfnum = 1;
+% 0 boxcar, 1 hamming, 2 gauss, 3 hanning, 4 blackman, 5 bartlett
+useCaseParams.bfxmitparams(1).xmitapodishape = 1;
+useCaseParams.bfxmitparams(1).xmitapodigausswidth = 0.7; 
+useCaseParams.bfxmitparams(1).xmitfocus = 0.02;
+% quantization of apodization round of to levels in vector, if empty not
+% rounding
+useCaseParams.bfxmitparams(1).xmitapodilevels = [];
+
+%% Set the impulse response and excitation
+
+f0 = 3e6;
+fs = 120e6;
+xmt_impulse_response = sin(2*pi*f0*(0:1/fs:2/f0))';
+xmt_impulse_response = xmt_impulse_response.*hanning(max(size(xmt_impulse_response)));
+rcv_impulse_response = xmt_impulse_response;
+
+excitation = (sin(2*pi*f0*(0:1/fs:2/f0)))';
+excitation = excitation.*hanning(max(size(excitation)));
+
+%% Generate Data - Beamform first stage
+
 Data_AcquisitionVer3('usecaseparams',useCaseParams, ...
                       'transducertype',transducerType, ...
                       'xmt_impulse_response', xmt_impulse_response, ...
@@ -83,14 +78,7 @@ Data_AcquisitionVer3('usecaseparams',useCaseParams, ...
                       'savepath',savepath, ...
                       'media',media)
 
-end
-     
-
-
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Define second stage beamforming parameters And view parameters
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%% Define second stage beamforming parameters
 
 useCaseParams.bfrcvparams(1).rcvfnum = useCaseParams.bfxmitparams(1).xmitfnum;
 useCaseParams.bfrcvparams(1).rcvapodishape = 1;
@@ -113,19 +101,9 @@ useCaseParams.scanparams(1).scanareadscr.stoplineangle =  pi/2;
 
 %useCaseParams.scanparams(1).steeringangle = 0;
 %useCaseParams.scanparams(1).phasedangle = 30/180*pi;
-% 
-% View parameters - included here because they must be saved with usecase
-useCaseParams.scanparams(1).windowtissueq.x_tismin = -0.04;
-useCaseParams.scanparams(1).windowtissueq.y_tismin = 0;                
-useCaseParams.scanparams(1).windowtissueq.x_tismax = 0.04;
-useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.10;
-useCaseParams.scanparams(1).scantype = 2;
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Define second stage beamforming parameters And view parameters
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
 %% Beamform 2nd stage
+
 tic
 BeamformationVer4('beamformation_method','sasbsim_new', ...
                   'usecase',useCaseParams, ...
@@ -133,11 +111,17 @@ BeamformationVer4('beamformation_method','sasbsim_new', ...
                   'symmetric','symmetric',...
                   'savepath',[savepath],...
                   'generate_scaling',false)
-toc           
+toc
 
-% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Plot
-%% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Define view parameters
+
+useCaseParams.scanparams(1).windowtissueq.x_tismin = -0.04;
+useCaseParams.scanparams(1).windowtissueq.y_tismin = 0;                
+useCaseParams.scanparams(1).windowtissueq.x_tismax = 0.04;
+useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.10;
+useCaseParams.scanparams(1).scantype = 2;
+
+%% Plot first stage image
 
 fig_nr = 1;
 type = 'psf';
@@ -168,7 +152,8 @@ set(gcf,'position',[  939   100   735   885])
 set(gca,'position',[ 80    70   640   800])
 drawnow
 
-%% second
+%% Plot second stage image
+
 fig_nr = 8;
 type = 'psf';
 switch(type)
