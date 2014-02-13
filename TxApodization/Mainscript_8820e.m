@@ -221,12 +221,22 @@ caxis([-60 0])
 set(gcf,'position',[  939   100   735   885])
 set(gca,'position',[ 80    70   640   800])
 drawnow
-psf = cfu_get_psf_metrics('script',1,'fh',figure(fig_nr),'rect',rect(1,:));
-text(rect(1,1),rect(1,2),...
-    {['FWHM ' num2str(psf.fwhm_x) ' ' num2str(psf.fwhm_y)];...
-        ['Radius 20dB ' num2str(psf.radius20dB)]},...
-    'Color','red','FontSize',14,'VerticalAlignment','top');
-drawnow
+% psf = cfu_get_psf_metrics('script',1,'fh',figure(fig_nr),'rect',rect(1,:));
+% text(rect(1,1),rect(1,2),...
+%     {['FWHM ' num2str(psf.fwhm_x) ' ' num2str(psf.fwhm_y)];...
+%         ['Radius 20dB ' num2str(psf.radius20dB)]},...
+%     'Color','red','FontSize',14,'VerticalAlignment','top');
+% drawnow
 print(figure(fig_nr),[savepath_figures 'SecondStage ' setupDesc],figure_format)
 
+
+%% Calculate point spread function
+
+for i = 1:size(rect,1)
+    psf(setting,i) = cfu_get_psf_metrics('script',1,'fh',figure(fig_nr),'rect',rect(i,:));
 end
+
+end
+
+
+
