@@ -314,7 +314,7 @@ for k = 1:rcv.no_lines
     rcv.apo(k,rcv.valid(k,:)==1) = apod_fun(n,useCaseParams.(mode)(1).(apodigausswidth_mode));
 end
 % Quantization of the apodization
-if useCaseParams.bfxmitparams(1).(apolevels_mode) >= 2
+if length( useCaseParams.bfxmitparams(1).(apolevels_mode) ) >= 2
     rcv.apo = quantization(rcv.apo,useCaseParams.bfxmitparams(1).(apolevels_mode));
 end
      
