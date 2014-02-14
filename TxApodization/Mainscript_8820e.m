@@ -40,7 +40,7 @@ apoDesc = { ...
 %     'Apo exp 16'; ...
 %     'Apo exp 8'; ...
 %     'Apo exp 4'; ...
-%     'Apo exp 3'; ...
+    'Apo exp 3'; ...
     'Apo inf'; ...
     };
 apodizations = { ...
@@ -52,7 +52,7 @@ apodizations = { ...
 %     exp(1:16)/exp(16); ...
 %     exp(1:16)/exp(8); ...
 %     exp(1:16)/exp(4); ...
-%     exp(1:16)/exp(3); ...
+    exp(1:16)/exp(3); ...
       []; ...
     };
 % apoDesc = {'Apo inf'};
@@ -123,7 +123,7 @@ useCaseParams.scanparams(1).startdepthq = 0.0;
 useCaseParams.scanparams(1).stopdepthq = 0.12;
 
 useCaseParams.scanparams(1).startlinenumq = 0;
-useCaseParams.scanparams(1).stoplinenumq = 268;
+useCaseParams.scanparams(1).stoplinenumq = 68;
 
 useCaseParams.scanparams(1).scanareadscr.startlineorigin.y = 0;
 useCaseParams.scanparams(1).scanareadscr.startlineorigin.x = 0.04;
@@ -261,15 +261,23 @@ end
 
 save psf
 
+
 %% Plot comparrison of psf between simulations
+
 fig_nr=4;
 figure(fig_nr);
 fwhm_x = reshape(cell2mat({psf(:).fwhm_x}),size(psf));
-fwhm_x = fwhm_x'
-plot(1:setting,fwhm_x)
-set(gca, 'XTick',1:setting);
-set(gca,'XTickLabel',apoDesc);
-legend(num2str(sca_z),'Location','EastOutside')
-xticklabel_rotate(45)
+fwhm_x_norm = fwhm_x(2:end,:)./repmat(fwhm_x(1,:),size(psf,1)-1,1);
+boxplot(fwhm_x_norm',apoDesc(2:end),'plotstyle','compact')
+% plot(1:setting,fwhm_x)
+% set(gca, 'XTick',1:setting);
+% set(gca,'XTickLabel',apoDesc);
+% legend(num2str(sca_z),'Location','EastOutside')
+% xticklabel_rotate(45)
 print(figure(fig_nr),[savepath_figures 'Comparrison of PSF'],figure_format)
 
+fig_nr=5;
+figure(fig_nr);
+radius20dB = reshape(cell2mat({psf(:).radius20dB}),size(psf));
+radius20dB_norm = radius20dB(2:end,:)./repmat(radius20dB(1,:),size(psf,1)-1,1);
+boxplot(radius20dB_norm',apoDesc(2:end),'plotstyle','compact')
