@@ -102,9 +102,14 @@ useCaseParams.bfxmitparams(1).xmitfnum = 2;
 useCaseParams.bfxmitparams(1).xmitapodishape = 1;
 % useCaseParams.bfxmitparams(1).xmitapodigausswidth = 0.7; 
 useCaseParams.bfxmitparams(1).xmitfocus = 0.02;
-% quantization of apodization round of to levels in vector, if empty not
-% rounding
-useCaseParams.bfxmitparams(1).xmitapodilevels = apodizations{setting,:};
+
+switch( length(apodizations{setting,:}) )
+    case(2) % use boxcar insted of rounding off
+        useCaseParams.bfxmitparams(1).xmitapodishape = 0;
+        useCaseParams.bfxmitparams(1).xmitapodilevels = [];
+    otherwise % round of to levels in vector
+        useCaseParams.bfxmitparams(1).xmitapodilevels = apodizations{setting,:};
+end
 
 %% Redefine receive parameter
 useCaseParams.bfrcvparams(1).rcvapodilevels = [];
