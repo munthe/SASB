@@ -97,7 +97,7 @@ useCaseParams.acmodparams(1).layerthickness1 = 0;
 useCaseParams.acmodparams(1).layerthickness2 = 0;
 useCaseParams.acmodparams(1).layerthickness3 = 0;
 
-useCaseParams.bfxmitparams(1).xmitfnum = 2;
+useCaseParams.bfxmitparams(1).xmitfnum = 1.5;
 % 0 boxcar, 1 hamming, 2 gauss, 3 hanning, 4 blackman, 5 bartlett
 useCaseParams.bfxmitparams(1).xmitapodishape = 1;
 % useCaseParams.bfxmitparams(1).xmitapodigausswidth = 0.7; 
