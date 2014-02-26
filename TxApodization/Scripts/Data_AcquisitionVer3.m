@@ -323,16 +323,16 @@ else
     fieldII.excitation = exc_fs;
 end
 
-
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Generate transmit scan lines
+%% Generate transmit and receive scanlines
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-xmt = Generate_Scanlines(useCaseParams, max_no_active_elements, symmetric, 'transmit', debug_scanlines);
+txxmt = Generate_Scanlines(useCaseParams, max_no_active_elements, symmetric, 'transmit', debug_scanlines);
+rxxmt = Generate_Scanlines(useCaseParams, max_no_active_elements, symmetric, 'receive', debug_scanlines);
 
-xmt.txapo = xmt.apo;
-xmt.rxapo = xmt.apo;
-
+xmt = txxmt;
+xmt.txapo = txxmt.apo;
+xmt.rxapo = rxxmt.apo;
 
 %     figure(103)
 %     p(1) = plot3(xmt.scanline_ref_point(:,1)*1000,xmt.scanline_ref_point(:,2)*1000, xmt.scanline_ref_point(:,3)*1000,'xr');
