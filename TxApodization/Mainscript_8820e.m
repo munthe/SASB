@@ -87,6 +87,9 @@ useCaseParams.bfxmitparams(1).xmitfocus = 0.02;
 % rounding
 useCaseParams.bfxmitparams(1).xmitapodilevels = apodizations{setting,:};
 
+%% Redefine receive parameter
+useCaseParams.bfrcvparams(1).rcvapodilevels = [];
+
 %% Set the impulse response and excitation
 
 f0 = 3e6;

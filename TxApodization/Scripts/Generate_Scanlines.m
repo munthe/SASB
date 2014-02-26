@@ -44,14 +44,14 @@ switch(mode)
         fnum_mode = 'rcvfnum';
         apodshape_mode = 'rcvapodishape';
         apodigausswidth_mode = 'rcvapodigausswidth';
-        apolevels_mode = 'rcvapodilevels'
+        apodilevels_mode = 'rcvapodilevels'
     case{'transmit','xmt'}
         mode = 'bfxmitparams';
         focus_mode = 'xmitfocus';
         fnum_mode = 'xmitfnum';    
         apodshape_mode = 'xmitapodishape';
         apodigausswidth_mode = 'xmitapodigausswidth';
-        apolevels_mode = 'xmitapodilevels'
+        apodilevels_mode = 'xmitapodilevels'
 end
 % calculate nr of lines
 
@@ -314,8 +314,8 @@ for k = 1:rcv.no_lines
     rcv.apo(k,rcv.valid(k,:)==1) = apod_fun(n,useCaseParams.(mode)(1).(apodigausswidth_mode));
 end
 % Quantization of the apodization
-if length( useCaseParams.bfxmitparams(1).(apolevels_mode) ) > 1
-    rcv.apo = quantization(rcv.apo,useCaseParams.bfxmitparams(1).(apolevels_mode));
+if length( useCaseParams.(mode)(1).(apodilevels_mode) ) > 1
+    rcv.apo = quantization(rcv.apo,useCaseParams.(mode)(1).(apodilevels_mode));
 end
      
 switch(dyn_focus)
