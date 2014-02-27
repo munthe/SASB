@@ -294,13 +294,16 @@ save psf
 
 %% Plot comparrison of psf between simulations
 
+setupDesc = [' Focus', num2str(useCaseParams.bfxmitparams(1).xmitfocus), ...
+    ' F#',num2str(useCaseParams.bfxmitparams(1).xmitfnum)];
+
 fig_nr=4;
 figure(fig_nr);
 fwhm_x = reshape(cell2mat({psf(:).fwhm_x}),size(psf));
 fwhm_x_norm = fwhm_x(2:end,:)./repmat(fwhm_x(1,:),size(psf,1)-1,1);
 boxplot(fwhm_x_norm',apoDesc(2:end),'plotstyle','compact')
 prettyfig
-print(figure(fig_nr),[savepath_figures 'Comparrison of PSF fwhm_x'],figure_format)
+print(figure(fig_nr),[savepath_figures 'Comparrison of PSF fwhm_x ' setupDesc],figure_format)
 
 fig_nr=5;
 figure(fig_nr);
@@ -308,5 +311,5 @@ radius20dB = reshape(cell2mat({psf(:).radius12dB}),size(psf));
 radius20dB_norm = radius20dB(2:end,:)./repmat(radius20dB(1,:),size(psf,1)-1,1);
 boxplot(radius20dB_norm',apoDesc(2:end),'plotstyle','compact')
 prettyfig
-print(figure(fig_nr),[savepath_figures 'Comparrison of PSF radius 20dB'],figure_format)
+print(figure(fig_nr),[savepath_figures 'Comparrison of PSF radius 20dB ' setupDesc],figure_format)
 
