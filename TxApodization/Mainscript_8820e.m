@@ -11,12 +11,14 @@ addpath(['./Scripts'])
 addpath(['./Scripts/Field'])
 addpath(['./Scripts/ScanConvert'])
 addpath(['./Scripts/bft3-beta-1-19/src'])
+addpath(['..'])
 
 usecase_filename = 'Pre_SASB_liver_2_1_p';
 
 savepath = loadpath;
 savepath_figures = '../Figures/';
-figure_format = '-dpng';
+figure_format = '-depsc2';
+setupfigdefault
 
 %% CFUtools for measuring
 CFUtools_init % init CFUtools
@@ -282,6 +284,7 @@ xlabel('Depth of point scatter [mm]');
 ylabel('FWHM [mm]');
 legend('x','y');
 % title(psf(setting,1).setupDesc);
+prettyfig
 print(figure(fig_nr),[savepath_figures 'PSF SecondStage ' setupDesc],figure_format)
 
 end
@@ -296,12 +299,14 @@ figure(fig_nr);
 fwhm_x = reshape(cell2mat({psf(:).fwhm_x}),size(psf));
 fwhm_x_norm = fwhm_x(2:end,:)./repmat(fwhm_x(1,:),size(psf,1)-1,1);
 boxplot(fwhm_x_norm',apoDesc(2:end),'plotstyle','compact')
+prettyfig
 print(figure(fig_nr),[savepath_figures 'Comparrison of PSF fwhm_x'],figure_format)
 
 fig_nr=5;
 figure(fig_nr);
-radius20dB = reshape(cell2mat({psf(:).radius20dB}),size(psf));
+radius20dB = reshape(cell2mat({psf(:).radius12dB}),size(psf));
 radius20dB_norm = radius20dB(2:end,:)./repmat(radius20dB(1,:),size(psf,1)-1,1);
 boxplot(radius20dB_norm',apoDesc(2:end),'plotstyle','compact')
+prettyfig
 print(figure(fig_nr),[savepath_figures 'Comparrison of PSF radius 20dB'],figure_format)
 
