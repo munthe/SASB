@@ -203,6 +203,7 @@ classdef transducer < handle
                 case{'8804'}
                     obj.id                  = '8804';
                     obj.nr_elements_x         = 192;                           % Number of elements in aperture 
+                    obj.nr_elements_y         = 1;                           % Number of elements in aperture 
                     obj.pitch               = 2.08e-004;                     % Element pitch              [m]
                     obj.kerf                = 0.035  / 1000;              	 % Element kerf               [m]
                     obj.height              = 4.5 / 1000;               	 % Element height             [m]
