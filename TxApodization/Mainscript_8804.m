@@ -11,12 +11,13 @@ addpath(['./Scripts'])
 addpath(['./Scripts/Field'])
 addpath(['./Scripts/ScanConvert'])
 addpath(['./Scripts/bft3-beta-1-19/src'])
+addpath(['..'])
 
 usecase_filename = 'WirePhantom75MHzSlidingFilterOffNormalPulse';
 
 savepath = loadpath;
 savepath_figures = '../Figures8804/';
-figure_format = '-dpng';
+figure_format = '-depsc2';
 
 %% CFUtools for measuring
 CFUtools_init % init CFUtools
@@ -288,18 +289,24 @@ end
 save psf
 
 %% Plot comparrison of psf between simulations
+
+setupDesc = [' Focus', num2str(useCaseParams.bfxmitparams(1).xmitfocus), ...
+    ' F#',num2str(useCaseParams.bfxmitparams(1).xmitfnum)];
+
 fig_nr=4;
 figure(fig_nr);
 fwhm_x = reshape(cell2mat({psf(:).fwhm_x}),size(psf));
-fwhm_x = fwhm_x'
-plot(1:setting,fwhm_x)
-set(gca, 'XTick',1:setting);
-set(gca,'XTickLabel',apoDesc);
+fwhm_x_norm = fwhm_x(2:end,:)./repmat(fwhm_x(1,:),size(psf,1)-1,1);
+boxplot(fwhm_x',apoDesc(1:end),'plotstyle','compact')
+prettyfig
+print(figure(fig_nr),[savepath_figures 'Comparrison of PSF fwhm_x ' setupDesc],figure_format)
 
-legend(num2str(sca_z))
-
-legend(num2str(sca_z),'Location','EastOutside')
-xticklabel_rotate(45)
-print(figure(fig_nr),[savepath_figures 'Comparrison of PSF'],figure_format)
+fig_nr=5;
+figure(fig_nr);
+radius20dB = reshape(cell2mat({psf(:).radius12dB}),size(psf));
+radius20dB_norm = radius20dB(2:end,:)./repmat(radius20dB(1,:),size(psf,1)-1,1);
+boxplot(radius20dB',apoDesc(1:end),'plotstyle','compact')
+prettyfig
+print(figure(fig_nr),[savepath_figures 'Comparrison of PSF radius 20dB ' setupDesc],figure_format)
 
 
