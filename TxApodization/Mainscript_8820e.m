@@ -83,12 +83,12 @@ useCaseParams.bfxmitparams(1).xmitapodishape = 1;
 % useCaseParams.bfxmitparams(1).xmitapodigausswidth = 0.7; 
 useCaseParams.bfxmitparams(1).xmitfocus = 0.02;
 
-switch( length(apodizations{setting,:}) )
+switch( length(apodizations{setting,1}) )
     case(2) % use boxcar insted of rounding off
         useCaseParams.bfxmitparams(1).xmitapodishape = 0;
         useCaseParams.bfxmitparams(1).xmitapodilevels = [];
     otherwise % round of to levels in vector
-        useCaseParams.bfxmitparams(1).xmitapodilevels = apodizations{setting,:};
+        useCaseParams.bfxmitparams(1).xmitapodilevels = apodizations{setting,1};
 end
 
 %% Redefine receive parameter
@@ -163,7 +163,7 @@ BeamformationVer4('beamformation_method','sasbsim_new', ...
 toc
 
 %% Plot first stage image
-setupDesc = [apoDesc{setting,3}, ...
+setupDesc = [apodizations{setting,3}, ...
      ' Focus', num2str(useCaseParams.bfxmitparams(1).xmitfocus), ...
     ' F#',num2str(useCaseParams.bfxmitparams(1).xmitfnum) ...
     ];
@@ -270,8 +270,6 @@ print(figure(fig_nr),[savepath_figures 'PSF SecondStage ' setupDesc],figure_form
 
 end
 
-save psf
-
 
 %% Plot comparrison of psf between simulations
 
@@ -297,3 +295,6 @@ boxplot(radius20dB_norm',apodizations(2:end,3),'plotstyle','compact','colors',bo
 prettyfig
 print(figure(fig_nr),[savepath_figures 'Comparrison of PSF radius 20dB ' setupDesc],figure_format)
 
+%% Save
+
+save(strcat('Transducer ',transducerType, setupDesc))
