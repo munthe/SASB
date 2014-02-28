@@ -266,7 +266,6 @@ print(figure(fig_nr),[savepath_figures 'PSF SecondStage ' setupDesc],figure_form
 
 end
 
-save psf
 
 %% Plot comparrison of psf between simulations
 
@@ -291,4 +290,10 @@ radius20dB_norm = radius20dB(2:end,:)./repmat(radius20dB(1,:),size(psf,1)-1,1);
 boxplot(radius20dB_norm',apodizations(2:end,3),'plotstyle','compact','colors',boxplotcolors(2:end,:));
 prettyfig
 print(figure(fig_nr),[savepath_figures 'Comparrison of PSF radius 20dB ' setupDesc],figure_format)
+
+%% Save
+
+save(strcat('Transducer ',transducerType, setupDesc))
+
+
 
