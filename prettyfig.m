@@ -35,7 +35,7 @@ set(gca, ...
 %       0.30196  ,     0.7451    ,  0.93333;...
 %       0.82353   ,    0.4549     ,       0]);
 
-colormap(flipud(gray));
+% colormap(flipud(gray));
 
 end
 

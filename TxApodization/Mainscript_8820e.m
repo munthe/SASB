@@ -33,9 +33,8 @@ media.phantom_amplitudes = ones(size(media.phantom_positions,1),1);
 
 %% Loop through different settings
 exp = [0,2.^[0:14]];
-exp = [0,2.^[0:14]];
 apoDesc = { ...
-    'Apo none'; ...
+    'Apo boxcar'; ...
     'Apo inf'; ...
     'Apo lin 16'; ...
     'Apo lin 8'; ...
@@ -218,6 +217,7 @@ caxis([-60 0])
 set(gcf,'position',[  939   100   735   885])
 set(gca,'position',[ 80    70   640   800])
 drawnow
+prettyfig
 print(figure(fig_nr),[savepath_figures 'FirstStage ' setupDesc],figure_format)
 
 
@@ -257,6 +257,7 @@ drawnow
 %         ['Radius 20dB ' num2str(psf.radius20dB)]},...
 %     'Color','red','FontSize',14,'VerticalAlignment','top');
 % drawnow
+prettyfig
 print(figure(fig_nr),[savepath_figures 'SecondStage ' setupDesc],figure_format)
 
 
@@ -278,11 +279,12 @@ figure(fig_nr);
 depth = cell2mat({psf(setting,:).y_coord})*1000;
 plot( ...
     depth,cell2mat({psf(setting,:).fwhm_x}),'o', ...
-    depth,cell2mat({psf(setting,:).fwhm_y}),'o' ...
+    depth,cell2mat({psf(setting,:).fwhm_y}),'o', ...
+    depth,cell2mat({psf(setting,:).radius20dB}),'o' ...
     );
 xlabel('Depth of point scatter [mm]');
-ylabel('FWHM [mm]');
-legend('x','y');
+ylabel('[mm]');
+legend('FWHM_x','FWHM_y','Radius 20dB','Location','NorthWest');
 % title(psf(setting,1).setupDesc);
 prettyfig
 print(figure(fig_nr),[savepath_figures 'PSF SecondStage ' setupDesc],figure_format)
