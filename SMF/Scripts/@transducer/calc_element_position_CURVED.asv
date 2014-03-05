@@ -1,0 +1,54 @@
+% Calculate position and direction of every transducer element.
+function [x, z, dir] = calc_element_position_CURVED(myClass_object,AROC,ROC,pitch,N)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% INPUT
+%   AROC                    Acoustic radius (element radius)
+%   ROC                     Shell radius
+%   N                       Number of elements
+%   pitch                   pitch
+% OUTPUT
+%   x
+%   z
+%   dir
+% DESCRIPTION
+%   Calculate position and direction of every transducer element.
+%   - First element at positive x-coordinates.
+%   - Last element at negative x-coordinates.
+%   - Element direction is symmetric around pi/2
+%   - Element direction increases from first to last element.
+%
+%   Based on "SM_GenerateElementPositions", 
+%   at: \Engine\SourceCode\RTSC\ScanMan\ScanCalc.c
+% VERSION		
+%   v1  2009-08-24
+%   v2  2010-03-11 - Modified argument list to function with transducer
+%                    class
+%   v3  2010-05-25 - Modified argument list to include layerthickness
+% AUTHOR    Jacob kortbek, Martin Christian Hemmsen
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ElementRadius       = AROC;
+ShellRadius         = ROC;
+Probelength         = (N-1)*pitch+1*pitch/40;
+ProbeScanAngle      = Probelength / ElementRadius;
+AngleStep           = ProbeScanAngle / (N-1);
+
+%  true proble scan angle 1.050500160000000
+i = 0;
+while ( i < N ) 
+    arcx            = pi/2 - ProbeScanAngle/2 + i*AngleStep;
+    fRad            = ElementRadius;
+    x(i+1)          = fRad * cos(arcx);
+    z(i+1)          = fRad * sin(arcx) - ShellRadius;
+    dir(i+1)        = arcx;
+    % increment counter
+    i = i+1;
+end
+keyboard
+
+
+
+
+
+
+
