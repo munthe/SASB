@@ -44,14 +44,14 @@ switch(mode)
         fnum_mode = 'rcvfnum';
         apodshape_mode = 'rcvapodishape';
         apodigausswidth_mode = 'rcvapodigausswidth';
-        apodilevels_mode = 'rcvapodilevels'
+        apodilevels_mode = 'rcvapodilevels';
     case{'transmit','xmt'}
         mode = 'bfxmitparams';
         focus_mode = 'xmitfocus';
         fnum_mode = 'xmitfnum';    
         apodshape_mode = 'xmitapodishape';
         apodigausswidth_mode = 'xmitapodigausswidth';
-        apodilevels_mode = 'xmitapodilevels'
+        apodilevels_mode = 'xmitapodilevels';
 end
 % calculate nr of lines
 

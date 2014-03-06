@@ -49,12 +49,10 @@ useCaseParams.bfxmitparams(1).xmitapodilevels = [];
 %% Redefine receive parameter
 useCaseParams.bfrcvparams(1).rcvapodilevels = [];
 
-%% Create Spat  ial Matched Filter
+%% Create Spatial Matched Filter
 
-% pos = [0 0 0.0150];
-x_coord = 0;
-SMF = Generate_SMF_line(x_coord,useCaseParams,transducerType);
+SMF = Generate_SMF(useCaseParams,transducerType);
 
 %% Plot
-imagesc(SMF{5})
+imagesc(SMF{3,3})
 colormap(gray)

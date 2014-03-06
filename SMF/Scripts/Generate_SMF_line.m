@@ -8,14 +8,13 @@
 
 function SMF = Generate_SMF_line(x_coord,useCaseParams,transducerType)
 
-span = [0.015 0.055];
+span = [0.01 0.05];
 num = 5;
-
-z_coord = linspace(span(1),span(2), num);
-SMF = {};
-for i = 1:num
-    pos = [x_coord 0 z_coord(i)];
-    SMF(i) = { Generate_SMF_point(pos,useCaseParams,transducerType) };
-end
+z = linspace(span(1),span(2), num)';
+pos = num2cell([x_coord*ones(size(z)) zeros(size(z)) z],2);
+SMF = cellfun( @(X) ...
+    Generate_SMF_point(X,useCaseParams,transducerType),...
+    pos,...
+    'UniformOutput',false);
 
 end
