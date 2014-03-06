@@ -1,13 +1,15 @@
+% Output:
+% SMF spatial matched filter
 %
-%
-% Input
+% Input:
 % pos = [x y z] 
+% useCaseParams
+% transducerType
+
 function SMF = Generate_SMF_point(pos,useCaseParams,transducerType)
 
 media.phantom_positions = pos;
 media.phantom_amplitudes = 1;
-
-savepath = './';
 
 f0 = 3e6;
 fs = 120e6;
@@ -18,7 +20,7 @@ rcv_impulse_response = xmt_impulse_response;
 excitation = (sin(2*pi*f0*(0:1/fs:2/f0)))';
 excitation = excitation.*hanning(max(size(excitation)));
 
-Data_AcquisitionVer3('usecaseparams',useCaseParams, ...
+SMF = Data_Acquisition('usecaseparams',useCaseParams, ...
                       'transducertype',transducerType, ...
                       'xmt_impulse_response', xmt_impulse_response, ...
                       'xmt_impulse_response_fs',fs, ...
@@ -27,7 +29,6 @@ Data_AcquisitionVer3('usecaseparams',useCaseParams, ...
                       'excitation_waveform', excitation, ... 
                       'excitation_fs',fs, ...
                       'symmetric','symmetric',...
-                      'savepath',savepath, ...
-                      'media',media)
+                      'media',media);
 
 end

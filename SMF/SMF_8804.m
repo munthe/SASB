@@ -8,10 +8,10 @@ loadpath = './';
 base_path_usecase = './';
 
 addpath(['./Scripts'])
-addpath(['./Scripts/Field'])
-addpath(['./Scripts/ScanConvert'])
+% addpath(['./Scripts/Field'])
+% addpath(['./Scripts/ScanConvert'])
 %addpath(['./Scripts/bft3-beta-1-19/src'])
-addpath(['..'])
+addpath(genpath('../lib'))
 
 usecase_filename = 'WirePhantom75MHzSlidingFilterOffNormalPulse';
 
@@ -51,15 +51,10 @@ useCaseParams.bfrcvparams(1).rcvapodilevels = [];
 
 %% Create Spat  ial Matched Filter
 
-pos = [0 0 0.0150];
-Generate_SMF_point(pos,useCaseParams,transducerType)
+% pos = [0 0 0.0150];
+x_coord = 0;
+SMF = Generate_SMF_line(x_coord,useCaseParams,transducerType);
 
-
-
-%% Define view parameters
-
-useCaseParams.scanparams(1).windowtissueq.x_tismin = -0.04;
-useCaseParams.scanparams(1).windowtissueq.y_tismin = 0;                
-useCaseParams.scanparams(1).windowtissueq.x_tismax = 0.04;
-useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.10;
-useCaseParams.scanparams(1).scantype = 2;
+%% Plot
+imagesc(SMF{5})
+colormap(gray)
