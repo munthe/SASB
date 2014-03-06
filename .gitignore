@@ -4,3 +4,7 @@ Figures/
 *.png
 *.pdf
 *.mat
+
+# Add
+!lib/*.mat
+!lib/*/*.mat

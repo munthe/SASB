@@ -8,10 +8,10 @@ loadpath = './';
 base_path_usecase = './';
 
 addpath(['./Scripts'])
-addpath(['./Scripts/Field'])
-addpath(['./Scripts/ScanConvert'])
-addpath(['./Scripts/bft3-beta-1-19/src'])
-addpath(['..'])
+% addpath(['./Scripts/Field'])
+% addpath(['./Scripts/ScanConvert'])
+% addpath(['./Scripts/bft3-beta-1-19/src'])
+addpath(genpath('../lib'))
 
 usecase_filename = 'WirePhantom75MHzSlidingFilterOffNormalPulse';
 
