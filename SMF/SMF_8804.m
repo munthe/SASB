@@ -50,9 +50,11 @@ useCaseParams.bfxmitparams(1).xmitapodilevels = [];
 useCaseParams.bfrcvparams(1).rcvapodilevels = [];
 
 %% Create Spatial Matched Filter
-
-SMF = Generate_SMF(useCaseParams,transducerType);
+resolution = [5 3];
+tic
+SMF = Generate_SMF(resolution,useCaseParams,transducerType);
+toc
 
 %% Plot
-imagesc(SMF{3,3})
+imagesc(SMF{1,3})
 colormap(gray)
