@@ -4,6 +4,7 @@ Figures/
 *.png
 *.pdf
 *.mat
+*.out
 
 # Add
 !lib/*.mat
