@@ -13,3 +13,5 @@ save([savepath 'SMF'],SMF)
 
 %% Clean up
 rmdir([savepath tmpdir],'s')
+mkdir([savepath tmpdir])
+
