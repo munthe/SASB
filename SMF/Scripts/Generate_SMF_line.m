@@ -12,8 +12,8 @@ z = linspace(useCaseParams.scanparams(1).windowtissueq.y_tismin,...
              useCaseParams.scanparams(1).windowtissueq.y_tismax,...
              resolution)';
 % Scatter cannot be at depth 0, so set to 1mm if it is the case.
-if z(1)==0; z(1) = 1; end
-z = [0.1 0.2 0.3 0.4 0.5];
+if z(1)==0; z(1) = 1/1000; end
+% z = [0.1 0.2 0.3 0.4 0.5]';
 % Generate cellarray with positions for point scatteres
 position = num2cell([x_coord*ones(size(z)) zeros(size(z)) z],2);
 SMF = cellfun( @(X) ...
