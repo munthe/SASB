@@ -5,7 +5,6 @@
 
 base_path = './';
 loadpath = './';
-base_path_usecase = './';
 
 addpath(['./Scripts'])
 % addpath(['./Scripts/Field'])
@@ -31,5 +30,5 @@ SMF = Generate_SMF(resolution,useCaseParams,transducerType);
 toc
 
 %% Plot
-imagesc(SMF{1,3})
+imagesc(SMF{5,1})
 colormap(gray)
