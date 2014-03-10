@@ -58,5 +58,5 @@ SMF = Generate_SMF(resolution,useCaseParams,transducerType);
 toc
 
 %% Plot
-imagesc(SMF{5,1})
+imagesc(SMF(3,2).filter)
 colormap(gray)
