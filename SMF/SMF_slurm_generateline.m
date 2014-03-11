@@ -3,8 +3,8 @@
 addpath('../cluster');
 addpath(genpath('../lib'));
 addpath('./Scripts');
-
-% init_parameters;
+savepath = '/data/cfudata3/mah/Spatial_matched_filter/';
+tmpdir = 'tmp_SMF/';
 
 %% CFUtools for measuring
 CFUtools_init % init CFUtools
@@ -37,18 +37,18 @@ useCaseParams.bfxmitparams(1).xmitapodilevels = [];
 %% Redefine receive parameter
 useCaseParams.bfrcvparams(1).rcvapodilevels = [];
 
+%% Spatial matched filter settings
+line = par.scanline;
+resolution = [5,3]; % [points,lines]
 
-savepath = '/data/cfudata3/mah/Spatial_matched_filter/';
-tmpdir = 'tmp_SMF/';
-
-line = par.line;
-resolution = [5,3];
-
+%% Create filter
+% Create x_coordinates within the view parameters and the given lines.
 x_coord = linspace(useCaseParams.scanparams(1).windowtissueq.x_tismax,...
                    useCaseParams.scanparams(1).windowtissueq.x_tismin,...
                    resolution(2));
 
+% Generate one line of the filter
 SMFline = Generate_SMF_line(x_coord(line),resolution(1),useCaseParams,transducerType);
 
 %% Saving SMF
-save([savepath tmpdir 'SMF_line_' num2str(line)],'SMFline')
+save([savepath tmpdir 'SMF_line_' num2str(line)],'SMFline','useCaseParams','transducerType')
