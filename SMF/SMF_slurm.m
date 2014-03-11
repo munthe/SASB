@@ -5,7 +5,7 @@ resolution = [5,3];
 
 adm.scriptname='SMF_slurm_generateline';
 par.scanline = 1:resolution(2);
-par.resolution = {resolution};
+% par.resolution = {resolution};
 cfu_cluster(adm, par);
 
 % HOW TO
