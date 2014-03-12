@@ -1,4 +1,6 @@
-function [image] = SecondstageSMF( RFdata,resolution,SMFpath )
+function [RFdata2] = AddSMF( RFdata,resolution,SMFpath )
+% Adds a Spatial Matched Filter to a First Stage image
+%
 % Input
 % RFdata, Firststage image
 % resolution, [depth,number of lines]
@@ -7,28 +9,37 @@ function [image] = SecondstageSMF( RFdata,resolution,SMFpath )
 % Output
 % image, Second stage image
 
-image = zeros(resolution(1),92);
+RFdata2 = zeros(resolution);
 for line = 1:resolution(2)
     fprintf('Filtering %i line \n',line)
     load([SMFpath 'SMF_line_' num2str(line)], 'SMFline');
-    imageLine = Secondstage_line(SMFline);
+    scanline = Secondstage_line(SMFline);
 %     clear SMFline;
-    image(:,line) = imageLine;
+    RFdata2(:,line) = scanline;
 end
-% image = imageLine;
+% image = scanline;
 
-function imageLine = Secondstage_line(filter)
-    imageLine = zeros(resolution(1),1);
-    for i = 1:92%resolution(1)
+function scanline = Secondstage_line(filter)
+    scanline = zeros(resolution(1),1);
+    for i = 1:resolution(1)
+        f = crop2view(RFdata,filter(i));
         point = RFdata( ...
-                filter(i).index(1,1):filter(i).index(2,1) , ...
-                filter(i).index(1,2):filter(i).index(2,2) );
-        filtered = filter(i).filter .* point;
-        imageLine(i) = sum(sum( filtered ));
+                f.index(1,1):f.index(2,1) , ...
+                f.index(1,2):f.index(2,2) );
+        filtered = f.filter .* point;
+        scanline(i) = sum(sum( filtered ));
     end
    
-% SMF(coord).filter .* RFdata(SMF(coord).index(1,1):SMF(coord).index(2,1),SMF(coord).index(1,2):SMF(coord).index(2,2));
 end
 
 end
 
+function filter = crop2view(RFdata,filter)
+% Checks if the filter index goes beyond the depth of the RFdata, if so
+% crop the filter and update the filter index.
+delta = filter.index(2,1) - size(RFdata,1);
+if delta > 0
+    filter.index(2,1) = size(RFdata,1);
+    filter.filter = filter.filter(1:end-delta,:);
+end
+end
