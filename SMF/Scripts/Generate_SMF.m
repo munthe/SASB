@@ -9,15 +9,23 @@
 % useCaseParams
 % transducerType
 
-function SMF = Generate_SMF(useCaseParams,transducerType)
+function SMF = Generate_SMF(resolution,useCaseParams,transducerType)
 
-span = [-10,10]/1000;
-num = 3;
-x_coord = linspace(span(1),span(2), num);
+% span = [-10,10]/1000;
+x_coord = linspace(useCaseParams.scanparams(1).windowtissueq.x_tismax,...
+                   useCaseParams.scanparams(1).windowtissueq.x_tismin,...
+                   resolution(2));
+% x_coord = linspace(span(1),span(2), resolution(2));
+
 SMF = arrayfun( @(x) ...
-    Generate_SMF_line(x,useCaseParams,transducerType),...
+    Generate_SMF_line(x,resolution(1),useCaseParams,transducerType),...
     x_coord,...
     'UniformOutput',false);
 SMF = [SMF{:}];
+
+% SMF = cell(resolution);
+% parfor i = 1:resolution(2)
+%     SMF(:,i) = Generate_SMF_line(x_coord(i),useCaseParams,transducerType);
+% end
 
 end

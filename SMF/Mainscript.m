@@ -16,8 +16,11 @@ addpath(genpath('../lib'))
 usecase_filename = 'WirePhantom75MHzSlidingFilterOffNormalPulse';
 
 savepath = loadpath;
-savepath_figures = '../SMF_figures/';
+savepath_figures = '../Figures8804/';
 figure_format = '-depsc2';
+
+%% Initilize scanning settings
+% init_parameters
 
 %% CFUtools for measuring
 CFUtools_init % init CFUtools
@@ -50,8 +53,10 @@ useCaseParams.bfxmitparams(1).xmitapodilevels = [];
 useCaseParams.bfrcvparams(1).rcvapodilevels = [];
 
 %% Create Spatial Matched Filter
-
-SMF = Generate_SMF(useCaseParams,transducerType);
+resolution = [5 3];
+tic
+SMF = Generate_SMF(resolution,useCaseParams,transducerType);
+toc
 
 %% Generate scatter field
 sca_x = ([ 0  0  0  0  0  0  0  0  0]./1000)';
@@ -133,5 +138,5 @@ print(figure(fig_nr),[savepath_figures 'SecondStageFiltered ' setupDesc],figure_
 
 
 %% Plot
-%imagesc(SMF{1,2})
-%colormap(gray)
+imagesc(SMF(3,2).filter)
+colormap(gray)
