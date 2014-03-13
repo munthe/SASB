@@ -458,6 +458,7 @@ field_rcv_focus = 1;
 
 if(debug == 0) 
     for lateral_index = scanlines  
+%         lateral_index
         if(rem(lateral_index,ceil(xmt.no_lines/5)) == 0 && display == 1)
             fprintf('Calculating field for line nr. %d of %d\n',lateral_index,xmt.no_lines);
         end

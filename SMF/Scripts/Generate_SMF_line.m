@@ -29,7 +29,6 @@ SMF = struct('filter',filter,'index',index);
 end
 
 function [SMF,index] = Generate_SMF_point(position,useCaseParams,transducerType)
-position
 
 media.phantom_positions = position;
 media.phantom_amplitudes = 1;
