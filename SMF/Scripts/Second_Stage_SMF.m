@@ -1,29 +1,23 @@
-function [ image ] = Second_Stage_SMF( RFdata, SMF )
+function [ image ] = Second_Stage_SMF( RFdata, SMF, useCaseParams )
 %Second_Stage_SMF filters the first stage image
 %   and saves it to the folder Second_Stage_RF_Data_Beamformed
 
+resolution = [1000 , 100];
+SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_1000x100/';
+image = AddSMF(RFdata,resolution,SMFpath);
 
+savepath = '/home/s113291/SASB/SMF/';
+%savepath = loadpath;
 
-% Saving does not work.
-
-
-image = cellfun( @(X) ...
-    sum(sum(X.*RFdata)),...
-    SMF);
-
-if(~isdir([savepath 'Second_Stage_RF_Data_Beamformed' filesep]))
-            mkdir([savepath 'Second_Stage_RF_Data_Beamformed' filesep])
+% remove any old directory
+        if(isdir([savepath 'Second_Stage_RF_Data_Beamformed' ]))
+           rmdir([savepath 'Second_Stage_RF_Data_Beamformed'],'s')
+        end
+        
+if(~isdir([savepath 'Second_Stage_RF_Data_Beamformed']))
+           mkdir([savepath 'Second_Stage_RF_Data_Beamformed'])
 end
-        RFdata = image;
-        str = sprintf('%sSecond_Stage_RF_Data_Beamformed%s%sSecond_Stage_RF_Data_Beamformed.mat',savepath,filesep);
-        save(str,'RFdata');  
-end
 
-
-% From BeamformationVer4 line 1073
-% if(~isdir([savepath 'Second_Stage_RF_Data_Beamformed' filesep lower(type)]))
-%            mkdir([savepath 'Second_Stage_RF_Data_Beamformed' filesep lower(type)])
-%        end
-%        RFdata = bf_image_bft3;
-%        str = sprintf('%sSecond_Stage_RF_Data_Beamformed%s%s%sSecond_Stage_RF_Data_Beamformed.mat',savepath,filesep,lower(type),filesep);
-%        save(str,'RFdata','useCaseParams','bft3','xmt');  
+      RFdata = image;
+      str = sprintf('%sSecond_Stage_RF_Data_Beamformed',savepath, filesep);
+      save(str,'RFdata','useCaseParams');  
