@@ -90,7 +90,7 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
                   
 %% Create second stage image
 
-image = Second_Stage_SMF(RFdata(1:3500,1:192),SMF);
+image = Second_Stage_SMF(RFdata(1:3500,1:192),SMF, useCaseParams);
 
 
 %% Plot filtered second stage image
@@ -109,7 +109,7 @@ switch(type)
         compression = 'BK_muLaw_RTSC_VP_DRC_SEL_0';
         dynamic_range = 100;
 end
-plot_filtered_sasb_2 = Plot_Beamformed_Data(...
+plot_filtered_sasb_2 = Plot_Beamformed_Data('RFdata', image, ...
         'figure nr', 1, ...
         'data type','simulation',...
         'type of beamformation', 'sasb',...
@@ -138,5 +138,5 @@ print(figure(fig_nr),[savepath_figures 'SecondStageFiltered ' setupDesc],figure_
 
 
 %% Plot
-imagesc(SMF(3,2).filter)
-colormap(gray)
+%imagesc(SMF(3,2).filter)
+%colormap(gray)
