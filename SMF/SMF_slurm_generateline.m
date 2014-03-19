@@ -39,16 +39,20 @@ useCaseParams.bfrcvparams(1).rcvapodilevels = [];
 
 %% Spatial matched filter settings
 line = par.scanline;
-resolution = [1000,100]; % [points,lines]
+resolution = [5289,1]; % [points,lines]
 
 %% Create filter
 % Create x_coordinates within the view parameters and the given lines.
-x_coord = linspace(useCaseParams.scanparams(1).windowtissueq.x_tismax,...
-                   useCaseParams.scanparams(1).windowtissueq.x_tismin,...
-                   resolution(2));
+if resolution(2) == 1
+    x_coord = 0;
+else
+    x_coord = linspace(useCaseParams.scanparams(1).windowtissueq.x_tismax,...
+                       useCaseParams.scanparams(1).windowtissueq.x_tismin,...
+                       resolution(2));
+end
 
 % Generate one line of the filter
 SMFline = Generate_SMF_line(x_coord(line),resolution(1),useCaseParams,transducerType);
 
 %% Saving SMF
-save([savepath tmpdir 'SMF_line_' num2str(line)],'SMFline','useCaseParams','transducerType')
+save([savepath tmpdir 'SMF_line_' num2str(line)],'SMFline','useCaseParams','transducerType','-v7.3' )
