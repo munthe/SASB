@@ -1,12 +1,10 @@
-function [ image ] = Second_Stage_SMF( RFdata, SMF, useCaseParams )
+function [ image ] = Second_Stage_SMF( RFdata, SMFpath,resolution,useCaseParams )
 %Second_Stage_SMF filters the first stage image
 %   and saves it to the folder Second_Stage_RF_Data_Beamformed
 
-resolution = [100 , 100];
-SMFpath = 'tmp_SMF_100x100/';
 image = AddSMF(RFdata,resolution,SMFpath);
 
-savepath = '/home/s113291/SASB/SMF/';
+savepath = '../Figures_SMF';
 %savepath = loadpath;
 
 % remove any old directory
