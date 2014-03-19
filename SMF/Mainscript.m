@@ -16,7 +16,7 @@ addpath(genpath('../lib'))
 usecase_filename = 'WirePhantom75MHzSlidingFilterOffNormalPulse';
 
 savepath = loadpath;
-savepath_figures = '../Figures8804/';
+savepath_figures = '../Figures_SMF/';
 figure_format = '-depsc2';
 
 %% Initilize scanning settings
@@ -53,10 +53,10 @@ useCaseParams.bfxmitparams(1).xmitapodilevels = [];
 useCaseParams.bfrcvparams(1).rcvapodilevels = [];
 
 %% Create Spatial Matched Filter
-resolution = [5 3];
-tic
-SMF = Generate_SMF(resolution,useCaseParams,transducerType);
-toc
+% resolution = [5 3];
+% tic
+% SMF = Generate_SMF(resolution,useCaseParams,transducerType);
+% toc
 
 %% Generate scatter field
 sca_x = ([ 0  0  0  0  0  0  0  0  0]./1000)';
@@ -90,10 +90,12 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
                   
 %% Create second stage image
 
-image = Second_Stage_SMF(RFdata(1:3500,1:192),SMF, useCaseParams);
-
+image = Second_Stage_SMF(RFdata,SMF, useCaseParams);
 
 %% Plot filtered second stage image
+
+% Calculate sampling frequency for secondstage image plotting
+useCaseParams.bfrcvparams(1).smpfreq = size(image,1)*useCaseParams.scanparams(1).c_sound/(2*useCaseParams.scanparams(1).windowtissueq.y_tismax);
 
 setupDesc = [' Focus', num2str(useCaseParams.bfxmitparams(1).xmitfocus), ...
     ' F#',num2str(useCaseParams.bfxmitparams(1).xmitfnum) ...
@@ -139,5 +141,5 @@ print(figure(fig_nr),[savepath_figures 'SecondStageFiltered ' setupDesc],figure_
 
 
 %% Plot
-imagesc(SMF(3,2).filter)
-colormap(gray)
+% imagesc(SMF(3,2).filter)
+% colormap(gray)
