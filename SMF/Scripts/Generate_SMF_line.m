@@ -8,12 +8,11 @@
 
 function SMF = Generate_SMF_line(x_coord,resolution,useCaseParams,transducerType)
 
-z = linspace(useCaseParams.scanparams(1).windowtissueq.y_tismin,...
+y_tismin = useCaseParams.scanparams(1).windowtissueq.y_tismin
+if y_tismin<1/1000; y_tismin = 1/1000; end % Scatter cannot be at depth less than 1mm
+z = linspace(y_tismin,...
              useCaseParams.scanparams(1).windowtissueq.y_tismax,...
              resolution)';
-% Scatter cannot be at depth 0, so set to 1mm if it is the case.
-if z(1)==0; z(1) = 1/1000; end
-% z = [0.1 0.2 0.3 0.4 0.5]';
 % Generate cellarray with positions for point scatteres
 position = num2cell([x_coord*ones(size(z)) zeros(size(z)) z],2);
 [filter,index] = cellfun( @(X) ...

@@ -39,7 +39,7 @@ useCaseParams.bfrcvparams(1).rcvapodilevels = [];
 
 %% Spatial matched filter settings
 line = par.scanline;
-resolution = [5,3]; % [points,lines]
+resolution = [1000,100]; % [points,lines]
 
 %% Create filter
 % Create x_coordinates within the view parameters and the given lines.

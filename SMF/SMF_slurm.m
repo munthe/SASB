@@ -1,11 +1,12 @@
 % Generate Spatial matched filter using slurm for parallel processing
 % 
 
-resolution = [5,3];
+resolution = [1000,100];
 
 adm.scriptname='SMF_slurm_generateline';
 par.scanline = 1:resolution(2);
 % par.resolution = {resolution};
+adm.slurm_opt = '--cpus-per-task=4 -xfcfu[10-12]';
 cfu_cluster(adm, par);
 
 % HOW TO

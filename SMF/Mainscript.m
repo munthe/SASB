@@ -10,7 +10,7 @@ base_path_usecase = './';
 addpath(['./Scripts'])
 % addpath(['./Scripts/Field'])
 % addpath(['./Scripts/ScanConvert'])
-%addpath(['./Scripts/bft3-beta-1-19/src'])
+% addpath(['./Scripts/bft3-beta-1-19/src'])
 addpath(genpath('../lib'))
 
 usecase_filename = 'WirePhantom75MHzSlidingFilterOffNormalPulse';
@@ -139,5 +139,5 @@ print(figure(fig_nr),[savepath_figures 'SecondStageFiltered ' setupDesc],figure_
 
 
 %% Plot
-%imagesc(SMF(3,2).filter)
-%colormap(gray)
+imagesc(SMF(3,2).filter)
+colormap(gray)

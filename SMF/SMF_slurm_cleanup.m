@@ -1,5 +1,5 @@
-% 
-% 
+% Clean up after cluster run. 
+% Removes .out files and collects .mat files from tmp dir in one mat file
 
 %% Load filter lines
 SMF = cell(resolution(1),length(par.line));
