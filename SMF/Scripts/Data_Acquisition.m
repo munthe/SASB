@@ -17,7 +17,7 @@
 %       * recalc: the apodization function is recalculated to valid size
 
 
-function RFdata = Data_AcquisitionVer3(varargin)
+function RFdata = Data_Acquisition(varargin)
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%               Check if number of arguments is correct                 %%
