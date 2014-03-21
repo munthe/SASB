@@ -52,16 +52,10 @@ useCaseParams.bfxmitparams(1).xmitapodilevels = [];
 %% Redefine receive parameter
 useCaseParams.bfrcvparams(1).rcvapodilevels = [];
 
-%% Create Spatial Matched Filter
-% resolution = [5 3];
-% tic
-% SMF = Generate_SMF(resolution,useCaseParams,transducerType);
-% toc
-
 %% Generate scatter field
-sca_x = ([ 0  0  0  0  0  0  0  0  0]./1000)';
-sca_y = ([zeros(size(sca_x,1),1)]./1000);
-sca_z = ([15 25 35 45 55 65 75 85 95]./1000)';
+sca_z = (15:10:95/1000)';
+sca_x = (zeros(size(sca_z))/1000);
+sca_y = (zeros(size(sca_x))/1000);
 media.phantom_positions = [sca_x sca_y sca_z];
 media.phantom_amplitudes = ones(size(media.phantom_positions,1),1);
 
@@ -90,7 +84,10 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
                   
 %% Create second stage image
 
-image = Second_Stage_SMF(RFdata,SMF, useCaseParams);
+SMFpath = '/usr/local/s103303/SMF_5289x1/';
+resolution = [5289,1];
+image = Second_Stage_SMF(RFdata,SMFpath,resolution,useCaseParams);
+save(['./SMFimage' num2str(resolution(1)) 'x' num2str(resolution(1))], 'image','transducerType','useCaseParams','RFdata','resolution','SMFpath','media');
 
 %% Plot filtered second stage image
 
@@ -117,7 +114,7 @@ plot_filtered_sasb_2 = Plot_Beamformed_Data('RFdata', image, ...
         'data type','simulation',...
         'type of beamformation', 'sasb',...
         'stage','second',...
-        'show tgc','dont show tgc',...
+        'show tgc','show tgc',...
         'loadpath',savepath,...
         'gain',[],...
         'windowtissueq',useCaseParams.scanparams(1).windowtissueq,...
