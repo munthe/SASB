@@ -59,7 +59,7 @@ useCaseParams.bfrcvparams(1).rcvapodilevels = [];
 % toc
 
 %% Generate scatter field
-sca_z = (15:10:95/1000)';
+sca_z = ((15:10:95)/1000)';
 sca_x = (zeros(size(sca_z))/1000);
 sca_y = (zeros(size(sca_x))/1000);
 media.phantom_positions = [sca_x sca_y sca_z];
@@ -90,8 +90,8 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
                   
 %% Create second stage image
 
-SMFpath = '/usr/local/s103303/SMF_5289x1/';
-resolution = [5289,1];
+SMFpath = '/usr/local/s103303/cropepd/SMF_1000x100/';
+resolution = [1000,100];
 image = Second_Stage_SMF(RFdata,SMFpath,resolution,useCaseParams);
 save(['./SMFimage' num2str(resolution(1)) 'x' num2str(resolution(1))], 'image','transducerType','useCaseParams','RFdata','resolution','SMFpath','media');
 
@@ -144,5 +144,5 @@ print(figure(fig_nr),[savepath_figures 'Filtered' setupDesc],figure_format)
 
 
 %% Plot
-% imagesc(SMF(3,2).filter)
-% colormap(gray)
+imagesc(SMF(3,2).filter)
+colormap(gray)
