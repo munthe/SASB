@@ -256,13 +256,16 @@ figure(fig_nr);
 depth = cell2mat({psf(setting,:).y_coord})*1000;
 plot( ...
     depth,cell2mat({psf(setting,:).fwhm_x}),'o', ...
-    depth,cell2mat({psf(setting,:).fwhm_y}),'o' ...
+    depth,cell2mat({psf(setting,:).fwhm_y}),'o', ...
+    depth,cell2mat({psf(setting,:).radius20dB}),'o' ...
     );
 xlabel('Depth of point scatter [mm]');
-ylabel('FWHM [mm]');
-legend('x','y');
+ylabel('[mm]');
+legend('FWHM_x','FWHM_y','Radius 20dB','Location','NorthWest');
 % title(psf(setting,1).setupDesc);
+prettyfig
 print(figure(fig_nr),[savepath_figures 'PSF SecondStage ' setupDesc],figure_format)
+
 
 end
 

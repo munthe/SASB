@@ -90,8 +90,8 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
                   
 %% Create second stage image
 
-SMFpath = '/usr/local/s103303/cropepd/SMF_1000x100/';
-resolution = [1000,100];
+SMFpath = '/usr/local/s103303/SMF_3000x43_crop60dB/';
+resolution = [3000,43];
 image = Second_Stage_SMF(RFdata,SMFpath,resolution,useCaseParams);
 save(['./SMFimage' num2str(resolution(1)) 'x' num2str(resolution(1))], 'image','transducerType','useCaseParams','RFdata','resolution','SMFpath','media');
 
@@ -120,7 +120,7 @@ plot_filtered_sasb_2 = Plot_Beamformed_Data('RFdata', image, ...
         'data type','simulation',...
         'type of beamformation', 'sasb',...
         'stage','second',...
-        'show tgc','show tgc',...
+        'show tgc','dont show tgc',...
         'loadpath',savepath,...
         'gain',[],...
         'windowtissueq',useCaseParams.scanparams(1).windowtissueq,...
@@ -141,6 +141,35 @@ drawnow
 % drawnow
 
 print(figure(fig_nr),[savepath_figures 'Filtered' setupDesc],figure_format)
+
+
+%% Calculate point spread function
+
+% % psf(1,9) = struct
+% psf(setting,1) = cfu_get_psf_metrics('script',1,'fh',figure(fig_nr),'rect',rect(1,:));
+% % psf(setting,1).setupDesc = setupDesc;
+for i = 1:size(rect,1)
+    psf(i) = cfu_get_psf_metrics('script',1,'fh',figure(fig_nr),'rect',rect(i,:));
+%     psf(setting,i).setupDesc = setupDesc;
+end
+
+
+%% Plot psf as function of depth
+
+fig_nr = 3;
+figure(fig_nr);
+depth = cell2mat({psf(:).y_coord})*1000;
+plot( ...
+    depth,cell2mat({psf(:).fwhm_x}),'o', ...
+    depth,cell2mat({psf(:).fwhm_y}),'o', ...
+    depth,cell2mat({psf(:).radius20dB}),'o' ...
+    );
+xlabel('Depth of point scatter [mm]');
+ylabel('[mm]');
+legend('FWHM_x','FWHM_y','Radius 20dB','Location','NorthWest');
+% title(psf(setting,1).setupDesc);
+prettyfig
+print(figure(fig_nr),[savepath_figures 'PSF_SMF_' setupDesc],figure_format)
 
 
 %% Plot
