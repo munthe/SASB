@@ -9,3 +9,6 @@ Figures/
 # Add
 !lib/*.mat
 !lib/*/*.mat
+!*/Scripts/*.mat
+!*/Scripts/*/*.mat
+!*/Scripts/*/*/*.mat
