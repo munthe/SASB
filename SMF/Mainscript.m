@@ -52,6 +52,12 @@ useCaseParams.bfxmitparams(1).xmitapodilevels = [];
 %% Redefine receive parameter
 useCaseParams.bfrcvparams(1).rcvapodilevels = [];
 
+%% Create Spatial Matched Filter
+% resolution = [5 3];
+% tic
+% SMF = Generate_SMF(resolution,useCaseParams,transducerType);
+% toc
+
 %% Generate scatter field
 sca_z = (15:10:95/1000)';
 sca_x = (zeros(size(sca_z))/1000);
@@ -98,7 +104,7 @@ setupDesc = [' Focus', num2str(useCaseParams.bfxmitparams(1).xmitfocus), ...
     ' F#',num2str(useCaseParams.bfxmitparams(1).xmitfnum) ...
     ];
 
-fig_nr = 1;
+fig_nr = 2;
 type = 'psf';
 switch(type)
     case{'psf'}
@@ -110,7 +116,7 @@ switch(type)
 end
 plot_filtered_sasb_2 = Plot_Beamformed_Data('RFdata', image, ...
         'usecaseparams',useCaseParams,...
-        'figure nr', 1, ...
+        'figure nr', fig_nr, ...
         'data type','simulation',...
         'type of beamformation', 'sasb',...
         'stage','second',...
@@ -134,7 +140,7 @@ drawnow
 %     'Color','red','FontSize',14,'VerticalAlignment','top');
 % drawnow
 
-print(figure(fig_nr),[savepath_figures 'SecondStageFiltered ' setupDesc],figure_format)
+print(figure(fig_nr),[savepath_figures 'Filtered' setupDesc],figure_format)
 
 
 %% Plot
