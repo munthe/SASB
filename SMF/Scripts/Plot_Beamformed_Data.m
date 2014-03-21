@@ -1,4 +1,4 @@
-function obj = Plot_Beamformed_Data_Ver2(varargin)
+function obj = Plot_Beamformed_Data(varargin)
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%               Check if number of arguments is correct                 %%
