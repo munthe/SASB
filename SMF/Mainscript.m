@@ -57,14 +57,14 @@ useCaseParams.scanparams(1).windowtissueq.x_tismin = -0.02;
 useCaseParams.scanparams(1).windowtissueq.y_tismin = 0.001;                
 useCaseParams.scanparams(1).windowtissueq.x_tismax = 0.02;
 useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.101;
-useCaseParams.scanparams(1).scantype = 2;
+% useCaseParams.scanparams(1).scantype = 2;
 
 
 %% Create Spatial Matched Filter
-resolution = [1000 192];
-tic
-SMF = Generate_SMF(resolution,useCaseParams,transducerType);
-toc
+% resolution = [1000 192];
+% tic
+% SMF = Generate_SMF(resolution,useCaseParams,transducerType);
+% toc
 
 %% Generate scatter field
 sca_z = ((15:10:95)/1000)';
@@ -98,7 +98,7 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
                   
 %% Create second stage image
 
-SMFpath = '/usr/local/s103303/SMF_3000x43_crop20dB/';
+SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_1000x192_crop20dB/';
 resolution = [1000,192];
 image = Second_Stage_SMF(RFdata,SMFpath,resolution,useCaseParams);
 save(['./SMFimage' num2str(resolution(1)) 'x' num2str(resolution(1))], 'image','transducerType','useCaseParams','RFdata','resolution','SMFpath','media');
@@ -179,7 +179,15 @@ legend('FWHM_x','FWHM_y','Radius 20dB','Location','NorthWest');
 prettyfig
 print(figure(fig_nr),[savepath_figures 'PSF_SMF_' setupDesc],figure_format)
 
+%% Plot beam profile
+
+fig_nr = 4;
+figure(2);
+img_data = get(get(gca,'children'),'cdata');
+figure(fig_nr);
+plot(max(img(570:640,:)))
+
 
 %% Plot
-imagesc(SMF(3,2).filter)
-colormap(gray)
+% imagesc(SMF(3,2).filter)
+% colormap(gray)
