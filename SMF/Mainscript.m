@@ -184,9 +184,16 @@ print(figure(fig_nr),[savepath_figures 'PSF_SMF_' setupDesc],figure_format)
 fig_nr = 4;
 figure(2);
 img_data = get(get(gca,'children'),'cdata');
+n = 7;
+rect(n,:);
+y_span = 1000*(useCaseParams.scanparams(1).windowtissueq.y_tismax ...
+         - useCaseParams.scanparams(1).windowtissueq.y_tismin);
+i(1) = rect(n,2)*size(img_data,1)/y_span;
+i(2) = (rect(n,2)+rect(n,4))*size(img_data,1)/y_span;
 figure(fig_nr);
-plot(max(img(570:640,:)))
-
+plot(max(img(i(1):i(2),:)))
+prettyfig
+print(figure(fig_nr),[savepath_figures 'BeamProfile_SMF_' setupDesc],figure_format)
 
 %% Plot
 % imagesc(SMF(3,2).filter)
