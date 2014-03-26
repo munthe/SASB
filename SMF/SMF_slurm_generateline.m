@@ -38,11 +38,11 @@ useCaseParams.bfxmitparams(1).xmitapodilevels = [];
 useCaseParams.bfrcvparams(1).rcvapodilevels = [];
 
 %% Define view parameters
-useCaseParams.scanparams(1).windowtissueq.x_tismin = -0.02;
+useCaseParams.scanparams(1).windowtissueq.x_tismin = -0.04;
 useCaseParams.scanparams(1).windowtissueq.y_tismin = 0.001;                
-useCaseParams.scanparams(1).windowtissueq.x_tismax = 0.02;
+useCaseParams.scanparams(1).windowtissueq.x_tismax = 0.04;
 useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.101;
-useCaseParams.scanparams(1).scantype = 2;
+% useCaseParams.scanparams(1).scantype = 2;
 
 %% Spatial matched filter settings
 line = par.scanline;

@@ -6,7 +6,7 @@ resolution = [1000,192];
 adm.scriptname='SMF_slurm_generateline';
 par.scanline = 1:resolution(2);
 % par.resolution = {resolution};
-adm.slurm_opt = '--cpus-per-task=4 -xfcfu[10-12]';
+adm.slurm_opt = '--cpus-per-task=24 -xfcfu[10-12]';
 cfu_cluster(adm, par);
 
 % HOW TO
