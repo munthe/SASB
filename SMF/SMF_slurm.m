@@ -1,7 +1,7 @@
 % Generate Spatial matched filter using slurm for parallel processing
 % 
 
-resolution = [1000,100];
+resolution = [1000,192];
 
 adm.scriptname='SMF_slurm_generateline';
 par.scanline = 1:resolution(2);

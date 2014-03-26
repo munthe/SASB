@@ -37,9 +37,16 @@ useCaseParams.bfxmitparams(1).xmitapodilevels = [];
 %% Redefine receive parameter
 useCaseParams.bfrcvparams(1).rcvapodilevels = [];
 
+%% Define view parameters
+useCaseParams.scanparams(1).windowtissueq.x_tismin = -0.02;
+useCaseParams.scanparams(1).windowtissueq.y_tismin = 0.001;                
+useCaseParams.scanparams(1).windowtissueq.x_tismax = 0.02;
+useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.101;
+useCaseParams.scanparams(1).scantype = 2;
+
 %% Spatial matched filter settings
 line = par.scanline;
-resolution = [5289,1]; % [points,lines]
+resolution = [1000,192]; % [points,lines]
 
 %% Create filter
 % Create x_coordinates within the view parameters and the given lines.
