@@ -156,6 +156,7 @@ print(figure(fig_nr),[savepath_figures 'Filtered' setupDesc],figure_format)
 % % psf(1,9) = struct
 % psf(setting,1) = cfu_get_psf_metrics('script',1,'fh',figure(fig_nr),'rect',rect(1,:));
 % % psf(setting,1).setupDesc = setupDesc;
+figure(2);
 for i = 1:size(rect,1)
     psf(i) = cfu_get_psf_metrics('script',1,'fh',figure(fig_nr),'rect',rect(i,:));
 %     psf(setting,i).setupDesc = setupDesc;
@@ -182,16 +183,9 @@ print(figure(fig_nr),[savepath_figures 'PSF_SMF_' setupDesc],figure_format)
 %% Plot beam profile
 
 fig_nr = 4;
-figure(2);
-img_data = get(get(gca,'children'),'cdata');
 n = 7;
-rect(n,:);
-y_span = 1000*(useCaseParams.scanparams(1).windowtissueq.y_tismax ...
-         - useCaseParams.scanparams(1).windowtissueq.y_tismin);
-i(1) = rect(n,2)*size(img_data,1)/y_span;
-i(2) = (rect(n,2)+rect(n,4))*size(img_data,1)/y_span;
 figure(fig_nr);
-plot(max(img_data(i(1):i(2),:)))
+plot(psf(n).profile)
 prettyfig
 print(figure(fig_nr),[savepath_figures 'BeamProfile_SMF_' setupDesc],figure_format)
 
