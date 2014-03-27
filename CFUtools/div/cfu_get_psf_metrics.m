@@ -409,6 +409,9 @@ function st = inspect_fwhm_do(rect,hAxis,opt)
       end
   end
   
+  % Beam profile of area, using max in each line.
+  st.profile = max(area);
+  
   
 end
 
