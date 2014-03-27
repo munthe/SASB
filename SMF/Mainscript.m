@@ -219,9 +219,15 @@ print(figure(fig_nr),[savepath_figures 'PSF_SMF_' setupDesc],figure_format)
 fig_nr = 4;
 n = 7;
 figure(fig_nr);
-plot(psf(n).profile)
+ax = 1000*linspace(...
+    useCaseParams.scanparams(1).windowtissueq.x_tismin,...
+    useCaseParams.scanparams(1).windowtissueq.x_tismax,...
+    length(psf(n).profile));
+plot(ax,psf(n).profile)
+xlabel('[mm]');
+ylabel('Attenuation [dB]');
 prettyfig
-print(figure(fig_nr),[savepath_figures 'BeamProfile_SMF_' setupDesc],figure_format)
+print(figure(fig_nr),[savepath_figures 'BeamProfile-scatter' n '_SMF_' setupDesc],figure_format)
 
 %% Plot
 % imagesc(SMF(3,2).filter)
