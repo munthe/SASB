@@ -98,10 +98,10 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
                   
 %% Create second stage image
 
-SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_1000x192_crop20dB/';
+SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_1000_192_crop20dB/';
 resolution = [1000,192];
 image = Second_Stage_SMF(RFdata,SMFpath,resolution,useCaseParams);
-save(['./SMFimage' num2str(resolution(1)) 'x' num2str(resolution(1))], 'image','transducerType','useCaseParams','RFdata','resolution','SMFpath','media');
+save(['./SMFimage' num2str(resolution(1)) 'x' num2str(resolution(2))], 'image','transducerType','useCaseParams','RFdata','resolution','SMFpath','media');
 
 %% Plot filtered second stage image
 
