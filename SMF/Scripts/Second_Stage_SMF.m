@@ -1,8 +1,8 @@
-function [ image ] = Second_Stage_SMF( RFdata, SMFpath,resolution,useCaseParams )
+function [ image ] = Second_Stage_SMF( RFdata, SMFpath,resolution,linespan,useCaseParams )
 %Second_Stage_SMF filters the first stage image
 %   and saves it to the folder Second_Stage_RF_Data_Beamformed
 
-image = AddSMF(RFdata,resolution,SMFpath);
+image = AddSMF(RFdata,[1,linespan(1);resolution(1),linespan(2)],SMFpath);
 
 savepath = '../Figures_SMF';
 %savepath = loadpath;

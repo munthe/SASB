@@ -53,7 +53,7 @@ SMF = Data_Acquisition('usecaseparams',useCaseParams, ...
                       'symmetric','symmetric',...
                       'media',media);
 
-SMF = cropfilter(SMF,-20);
+SMF = cropfilter(SMF,-10);
 [SMF,index] = removezeros(SMF);
 
 end

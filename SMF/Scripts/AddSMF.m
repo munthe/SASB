@@ -9,8 +9,8 @@ function [RFdata2] = AddSMF( RFdata,resolution,SMFpath )
 % Output
 % image, Second stage image
 
-RFdata2 = zeros(resolution);
-for line = 1:resolution(2)
+RFdata2 = zeros(resolution(2,:));
+for line = resolution(1,2):resolution(2,2)
     fprintf('Filtering %i line \n',line)
     load([SMFpath 'SMF_line_' num2str(line)], 'SMFline');
     scanline = Secondstage_line(SMFline);
@@ -20,8 +20,8 @@ end
 % image = scanline;
 
 function scanline = Secondstage_line(filter)
-    scanline = zeros(resolution(1),1);
-    for i = 1:resolution(1)
+    scanline = zeros(resolution(2,1),1);
+    parfor i = resolution(1,1):resolution(2,1)
         f = crop2view(RFdata,filter(i));
         point = RFdata( ...
                 f.index(1,1):f.index(2,1) , ...
