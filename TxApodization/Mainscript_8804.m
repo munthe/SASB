@@ -269,6 +269,22 @@ prettyfig
 print(figure(fig_nr),[savepath_figures 'PSF SecondStage ' setupDesc],figure_format)
 
 
+%% Plot beam profile
+
+fig_nr = 4;
+n = 7;
+figure(fig_nr);
+ax = 1000*linspace(...
+    useCaseParams.scanparams(1).windowtissueq.x_tismin,...
+    useCaseParams.scanparams(1).windowtissueq.x_tismax,...
+    length(psf(n).profile));
+plot(ax,cell2mat({psf(setting,n).profile}))
+xlabel('[mm]');
+ylabel('Attenuation [dB]');
+prettyfig
+print(figure(fig_nr),[savepath_figures 'BeamProfile-scatter' n '_' setupDesc],figure_format)
+
+
 end
 
 
@@ -280,7 +296,7 @@ groups = cell2mat(apodizations(:,2));
 c = linspecer(max(groups));
 boxplotcolors = c(groups,:);
 
-fig_nr=4;
+fig_nr=5;
 figure(fig_nr);
 fwhm_x = reshape(cell2mat({psf(:).fwhm_x}),size(psf));
 fwhm_x_norm = fwhm_x(2:end,:)./repmat(fwhm_x(1,:),size(psf,1)-1,1);
@@ -288,7 +304,7 @@ boxplot(fwhm_x_norm',apodizations(2:end,3),'plotstyle','compact','colors',boxplo
 prettyfig
 print(figure(fig_nr),[savepath_figures 'Comparrison of PSF fwhm_x ' setupDesc],figure_format)
 
-fig_nr=5;
+fig_nr=6;
 figure(fig_nr);
 radius20dB = reshape(cell2mat({psf(:).radius12dB}),size(psf));
 radius20dB_norm = radius20dB(2:end,:)./repmat(radius20dB(1,:),size(psf,1)-1,1);
