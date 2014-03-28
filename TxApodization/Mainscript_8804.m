@@ -18,6 +18,7 @@ usecase_filename = 'WirePhantom75MHzSlidingFilterOffNormalPulse';
 savepath = loadpath;
 savepath_figures = '../Figures8804/';
 figure_format = '-depsc2';
+setupfigdefault
 
 %% CFUtools for measuring
 CFUtools_init % init CFUtools
@@ -282,7 +283,7 @@ plot(ax,cell2mat({psf(setting,n).profile}))
 xlabel('[mm]');
 ylabel('Attenuation [dB]');
 prettyfig
-print(figure(fig_nr),[savepath_figures 'BeamProfile-scatter' n '_' setupDesc],figure_format)
+print(figure(fig_nr),[savepath_figures 'BeamProfile-scatter' num2str(n) '_' setupDesc],figure_format)
 
 
 end
