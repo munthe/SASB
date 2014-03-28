@@ -8,7 +8,7 @@
 
 function SMF = Generate_SMF_line(x_coord,resolution,useCaseParams,transducerType)
 
-y_tismin = useCaseParams.scanparams(1).windowtissueq.y_tismin
+y_tismin = useCaseParams.scanparams(1).windowtissueq.y_tismin;
 if y_tismin<1/1000; y_tismin = 1/1000; end % Scatter cannot be at depth less than 1mm
 z = linspace(y_tismin,...
              useCaseParams.scanparams(1).windowtissueq.y_tismax,...
@@ -53,7 +53,7 @@ SMF = Data_Acquisition('usecaseparams',useCaseParams, ...
                       'symmetric','symmetric',...
                       'media',media);
 
-SMF = cropfilter(SMF,-60);
+SMF = cropfilter(SMF,-20);
 [SMF,index] = removezeros(SMF);
 
 end
