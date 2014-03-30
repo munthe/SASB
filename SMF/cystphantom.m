@@ -108,8 +108,8 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
                 
 %% Create second stage image
 
-SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_1000_192_crop20dB/';
-resolution = [1000,192];
+SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_3000x192_crop60dB/';
+resolution = [3000,192];
 image = Second_Stage_SMF(RFdata,SMFpath,resolution,useCaseParams);
 
 save(['./cystimage' num2str(resolution(1)) 'x' num2str(resolution(2))], 'image','transducerType','useCaseParams','RFdata','resolution','SMFpath','media');
