@@ -1,6 +1,6 @@
 
 adm.scriptname='cystphantom';
-% par.scanline = 1:2;
+par.scanline = 1;
 adm.slurm_opt = '--cpus-per-task=4 -xfcfu[10-12]';
 cfu_cluster(adm, par);
 
