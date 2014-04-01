@@ -153,18 +153,18 @@ end
 st1 = inspect_cnr_do(rect1, hAxis,opt);
 st2 = inspect_cnr_do(rect2, hAxis,opt);
 
-<<<<<<< .mine
+% <<<<<<< .mine
 st.cnr           = (st1.mean - st2.mean) /  sqrt(st1.var + st2.var); % the larger the better
 st.speckle_index = sqrt(st1.var)/st1.mean + sqrt(st2.var)/st2.mean;  % the smaller the better
 st.snr           = (st1.mean - st2.mean) /  sqrt(st1.mean^2+st2.mean^2); % the larger the better
 st.cr            = (st1.mean - st2.mean) / (st1.mean + st2.mean); % the larger the better
-=======
-st.cnr           = (st1.mean - st2.mean) /  sqrt(st1.var + st2.var);
-st.cnr2          = (st1.mean - st2.mean) /  sqrt(st1.var);
-st.speckle_index = sqrt(st1.var)/st1.mean + sqrt(st2.var)/st2.mean;
-st.snr           = (st1.mean - st2.mean) /  sqrt(st1.mean^2+st2.mean^2);
-st.cr            = (st1.mean - st2.mean) / (st1.mean + st2.mean);
->>>>>>> .r82
+% =======
+% st.cnr           = (st1.mean - st2.mean) /  sqrt(st1.var + st2.var);
+% st.cnr2          = (st1.mean - st2.mean) /  sqrt(st1.var);
+% st.speckle_index = sqrt(st1.var)/st1.mean + sqrt(st2.var)/st2.mean;
+% st.snr           = (st1.mean - st2.mean) /  sqrt(st1.mean^2+st2.mean^2);
+% st.cr            = (st1.mean - st2.mean) / (st1.mean + st2.mean);
+% >>>>>>> .r82
 st.snr0_speckle  = st1.mean / sqrt(st1.var);
 st.snr0_cyst     = st2.mean / sqrt(st2.var);
 
