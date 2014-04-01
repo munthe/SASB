@@ -3,6 +3,7 @@ RF_Data/
 Figures/
 *.png
 *.pdf
+*.eps
 *.mat
 *.out
 
