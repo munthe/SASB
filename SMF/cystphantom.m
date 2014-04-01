@@ -67,19 +67,13 @@ useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.101;
 % toc
 
 %% Generate scatter field
-% sca_z = ((15:10:95)/1000)';
-% sca_x = (zeros(size(sca_z))/1000);
-% sca_y = (zeros(size(sca_x))/1000);
-% media.phantom_positions = [sca_x sca_y sca_z];
-% media.phantom_amplitudes = ones(size(media.phantom_positions,1),1);
-
 medium.x    = [-0.025 0.025]; % x-limit of medium in meters
 medium.y    = [-0.01 0.01]; % y-limit of medium in meters
 medium.z    = [0.05 0.10]; % z-limit of medium in meters
 medium.dens = 8/(0.5*0.7); % average number of scatterer per mm^3
 
-cyst.r      = [0.01 0.01 0.01]; % radius in the x, y and z-dimension
-cyst.c      = [0 0 0.075]; % center coordinate of the cyst 
+cyst.r      = [0.005 0.005 0.005]; % radius in the x, y and z-dimension
+cyst.c      = [-0.01 0 0.075]; % center coordinate of the cyst 
 cyst.amp    = 0; % amplitude of cyst (set to 0 for anechoic, 1 for same amplitude as medium)
 
 [media.phantom_positions, media.phantom_amplitudes] = cfu_cyst_phantom(medium, cyst);
@@ -105,7 +99,13 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
                       'excitation_fs',fs, ...
                       'symmetric','symmetric',...
                       'media',media);
-                
+                  
+%% Save
+str = ['./cystimage_RFdata'];
+fprintf(['Saving RFdata to ' str '.mat ... ']);
+save(str, 'transducerType','useCaseParams','RFdata','media');
+fprintf('Saved.\n');
+                  
 %% Create second stage image
 
 SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_3000x192_crop60dB/';
