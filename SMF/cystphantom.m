@@ -15,7 +15,7 @@ addpath(genpath('../lib'))
 
 usecase_filename = 'WirePhantom75MHzSlidingFilterOffNormalPulse';
 
-savepath = loadpath;
+savepath = '/data/cfudata3/mah/Spatial_matched_filter/cystphantom/';
 savepath_figures = '../Figures_SMF/';
 figure_format = '-depsc2';
 setupfigdefault
@@ -36,6 +36,7 @@ useCaseParams.scanparams(1).SubAppertureSize = 1;
 useCaseParams.scanparams(1).scantype = 0; % 1d array imaging
 
 transducerType = '8804';
+useCaseParams.bfxmitparams(1).xmitfreq = 3e6;
 
 % Matching layer not important for simulation, set to zero
 useCaseParams.acmodparams(1).layerthickness1 = 0;
@@ -67,20 +68,21 @@ useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.101;
 % toc
 
 %% Generate scatter field
-medium.x    = [-0.025 0.025]; % x-limit of medium in meters
-medium.y    = [-0.01 0.01]; % y-limit of medium in meters
-medium.z    = [0.05 0.10]; % z-limit of medium in meters
+medium.x    = [-0.02 0.02]; % x-limit of medium in meters
+medium.y    = [-0.0005 0.0005]; % y-limit of medium in meters
+medium.z    = [0.04 0.09]; % z-limit of medium in meters
 medium.dens = 8/(0.5*0.7); % average number of scatterer per mm^3
 
 cyst.r      = [0.005 0.005 0.005]; % radius in the x, y and z-dimension
-cyst.c      = [-0.01 0 0.075]; % center coordinate of the cyst 
+cyst.c      = [-0.005 0 0.075]; % center coordinate of the cyst 
 cyst.amp    = 0; % amplitude of cyst (set to 0 for anechoic, 1 for same amplitude as medium)
 
 [media.phantom_positions, media.phantom_amplitudes] = cfu_cyst_phantom(medium, cyst);
 
 %% Create first stage
+scanline = par.scanline;
 
-f0 = 3e6;
+f0 = useCaseParams.bfxmitparams(1).xmitfreq;
 fs = 120e6;
 xmt_impulse_response = sin(2*pi*f0*(0:1/fs:2/f0))';
 xmt_impulse_response = xmt_impulse_response.*hanning(max(size(xmt_impulse_response)));
@@ -90,30 +92,31 @@ excitation = (sin(2*pi*f0*(0:1/fs:2/f0)))';
 excitation = excitation.*hanning(max(size(excitation)));
 
 RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
-                      'transducertype',transducerType, ...
-                      'xmt_impulse_response', xmt_impulse_response, ...
-                      'xmt_impulse_response_fs',fs, ...
-                      'rcv_impulse_response', rcv_impulse_response, ...
-                      'rcv_impulse_response_fs',fs, ...
-                      'excitation_waveform', excitation, ... 
-                      'excitation_fs',fs, ...
-                      'symmetric','symmetric',...
-                      'media',media);
-                  
+    'transducertype',transducerType, ...
+    'xmt_impulse_response', xmt_impulse_response, ...
+    'xmt_impulse_response_fs',fs, ...
+    'rcv_impulse_response', rcv_impulse_response, ...
+    'rcv_impulse_response_fs',fs, ...
+    'excitation_waveform', excitation, ... 
+    'excitation_fs',fs, ...
+    'symmetric','symmetric',...
+    'media',media,...
+    'scanlines',scanline);
+
 %% Save
-str = ['./cystimage_RFdata'];
+str = [savepath 'tmp/' 'cystRFdata_line' num2str(scanline)];
 fprintf(['Saving RFdata to ' str '.mat ... ']);
 save(str, 'transducerType','useCaseParams','RFdata','media');
 fprintf('Saved.\n');
                   
-%% Create second stage image
-
-SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_3000x192_crop60dB/';
-resolution = [3000,192];
-image = Second_Stage_SMF(RFdata,SMFpath,resolution,useCaseParams);
-
-%% Save
-str = ['./cystimage' num2str(resolution(1)) 'x' num2str(resolution(2))];
-fprintf(['Saving RFdata and SMF filtered image to ' str '.mat ... ']);
-save(str, 'image','transducerType','useCaseParams','RFdata','resolution','SMFpath','media');
-fprintf('Saved.\n');
+% %% Create second stage image
+% 
+% SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_3000x192_crop60dB/';
+% resolution = [3000,192];
+% image = Second_Stage_SMF(RFdata,SMFpath,resolution,useCaseParams);
+% 
+% %% Save
+% str = ['./cystimage' num2str(resolution(1)) 'x' num2str(resolution(2))];
+% fprintf(['Saving RFdata and SMF filtered image to ' str '.mat ... ']);
+% save(str, 'image','transducerType','useCaseParams','RFdata','resolution','SMFpath','media');
+% fprintf('Saved.\n');
