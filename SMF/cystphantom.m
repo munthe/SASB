@@ -36,6 +36,7 @@ useCaseParams.scanparams(1).SubAppertureSize = 1;
 useCaseParams.scanparams(1).scantype = 0; % 1d array imaging
 
 transducerType = '8804';
+useCaseParams.bfxmitparams(1).xmitfreq = 3e6;
 
 % Matching layer not important for simulation, set to zero
 useCaseParams.acmodparams(1).layerthickness1 = 0;
@@ -68,19 +69,19 @@ useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.101;
 
 %% Generate scatter field
 medium.x    = [-0.02 0.02]; % x-limit of medium in meters
-medium.y    = [-0.005 0.005]; % y-limit of medium in meters
+medium.y    = [-0.001 0.001]; % y-limit of medium in meters
 medium.z    = [0.04 0.09]; % z-limit of medium in meters
-medium.dens = 0.5/(0.5*0.7); % average number of scatterer per mm^3
+medium.dens = 2/(0.5*0.7); % average number of scatterer per mm^3
 
 cyst.r      = [0.005 0.005 0.005]; % radius in the x, y and z-dimension
-cyst.c      = [-0.01 0 0.075]; % center coordinate of the cyst 
+cyst.c      = [-0.005 0 0.075]; % center coordinate of the cyst 
 cyst.amp    = 0; % amplitude of cyst (set to 0 for anechoic, 1 for same amplitude as medium)
 
 [media.phantom_positions, media.phantom_amplitudes] = cfu_cyst_phantom(medium, cyst);
 
 %% Create first stage
 
-f0 = 3e6;
+f0 = useCaseParams.bfxmitparams(1).xmitfreq;
 fs = 120e6;
 xmt_impulse_response = sin(2*pi*f0*(0:1/fs:2/f0))';
 xmt_impulse_response = xmt_impulse_response.*hanning(max(size(xmt_impulse_response)));
@@ -89,7 +90,7 @@ rcv_impulse_response = xmt_impulse_response;
 excitation = (sin(2*pi*f0*(0:1/fs:2/f0)))';
 excitation = excitation.*hanning(max(size(excitation)));
 
-lines = [80,100];
+lines = [90:100];
 RFdata_lines = arrayfun( ...
     @(l)(Data_Acquisition('usecaseparams',useCaseParams, ...
         'transducertype',transducerType, ...
@@ -104,9 +105,14 @@ RFdata_lines = arrayfun( ...
         'scanlines',l)),...
     lines,...
     'UniformOutput',false);
-% Find max depth of scanlines:
-depth = max(arrayfun(@(x)(size(RFdata{x},1)),1:size(RFdata,2)));
-RFdata = zeros(depth,lines);
+% Find number of samples in each scanline:
+samples = arrayfun(@(x)(size(RFdata_lines{x},1)),1:size(RFdata_lines,2));
+% Construct Rfdata matrix
+RFdata = zeros(max(samples),length(lines));
+for i = 1:length(lines);
+    RFdata(1:samples(i),i) = RFdata_lines{i}(1:samples(i),lines(i));
+end
+
 
 %% Save
 str = ['./cystimage_RFdata'];
