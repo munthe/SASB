@@ -20,6 +20,13 @@ savepath_figures = '../Figures_SMF/';
 figure_format = '-depsc2';
 setupfigdefault
 
+%% Initilize scanning settings
+% init_parameters
+
+%% CFUtools for measuring
+CFUtools_init % init CFUtools
+rect = [-40*ones(1,9); 10:10:90; 80*ones(1,9); 10*ones(1,9)]';
+
 %% Read useCase file
 useCaseParams = Read_Usecase(fullfile(base_path_usecase,[usecase_filename '.dat']));
 
@@ -62,7 +69,7 @@ useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.101;
 
 %% Generate scatter field
 medium.x    = [-0.02 0.02]; % x-limit of medium in meters
-medium.y    = [-0.001 0.001]; % y-limit of medium in meters
+medium.y    = [-0.0005 0.0005]; % y-limit of medium in meters
 medium.z    = [0.04 0.09]; % z-limit of medium in meters
 medium.dens = 8/(0.5*0.7); % average number of scatterer per mm^3
 
