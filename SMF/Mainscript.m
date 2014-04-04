@@ -62,7 +62,7 @@ useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.101;
 
 
 %% Create Spatial Matched Filter
-% resolution = [1000 192];
+% resolution = [2 2];
 % tic
 % SMF = Generate_SMF(resolution,useCaseParams,transducerType);
 % toc

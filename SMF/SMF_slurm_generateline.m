@@ -46,7 +46,7 @@ useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.101;
 
 %% Spatial matched filter settings
 line = par.scanline;
-resolution = [1000,192]; % [points,lines]
+resolution = [3000,192]; % [points,lines]
 
 %% Create filter
 % Create x_coordinates within the view parameters and the given lines.
@@ -63,3 +63,4 @@ SMFline = Generate_SMF_line(x_coord(line),resolution(1),useCaseParams,transducer
 
 %% Saving SMF
 save([savepath tmpdir 'SMF_line_' num2str(line)],'SMFline','useCaseParams','transducerType','-v7.3' )
+fprintf(['Filter line' line ' saved.']);
