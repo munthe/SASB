@@ -96,7 +96,7 @@ useCaseParams.bfrcvparams(1).rcvapodilevels = [];
 
 %% Set the impulse response and excitation
 
-f0 = 3e6;
+f0 = useCaseParams.bfxmitparams(1).xmitfreq;
 fs = 120e6;
 xmt_impulse_response = sin(2*pi*f0*(0:1/fs:2/f0))';
 xmt_impulse_response = xmt_impulse_response.*hanning(max(size(xmt_impulse_response)));
