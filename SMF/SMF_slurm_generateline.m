@@ -46,7 +46,7 @@ useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.101;
 
 %% Spatial matched filter settings
 line = par.scanline;
-resolution = [5405,192]; % [points,lines]
+resolution = [3000,192]; % [points,lines]
 
 %% Create filter
 % Create x_coordinates within the view parameters and the given lines.
