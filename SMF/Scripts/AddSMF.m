@@ -21,7 +21,7 @@ for line = resolution(1,2):resolution(2,2)/2
 %     SMFline(line).index(:,2) = [resolution(2,2)-SMFline(line).index(2,2)+1;resolution(2,2)-SMFline(line).index(2,1)+1]; 
     scanline_r = Secondstage_line_r(SMFline);
     RFdata2(:,end-line+1) = scanline_r;
-    fprintf('took %f seconds \n',round(toc))
+    fprintf('took %f seconds \n',toc)
 end
 % image = scanline;
 
