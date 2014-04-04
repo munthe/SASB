@@ -11,7 +11,8 @@ function [RFdata2] = AddSMF( RFdata,resolution,SMFpath )
 
 RFdata2 = zeros(resolution(2,:));
 for line = resolution(1,2):resolution(2,2)/2
-    fprintf('Filtering %i line \n',line)
+    fprintf('Filtering line %i and %i ... ',line,resolution(2,2)-line+1)
+    tic
     load([SMFpath 'SMF_line_' num2str(line)], 'SMFline');
     scanline_l = Secondstage_line_l(SMFline);
 %     clear SMFline;
@@ -20,6 +21,7 @@ for line = resolution(1,2):resolution(2,2)/2
 %     SMFline(line).index(:,2) = [resolution(2,2)-SMFline(line).index(2,2)+1;resolution(2,2)-SMFline(line).index(2,1)+1]; 
     scanline_r = Secondstage_line_r(SMFline);
     RFdata2(:,end-line+1) = scanline_r;
+    fprintf('took %f seconds \n',round(toc))
 end
 % image = scanline;
 
