@@ -98,7 +98,7 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
 
 %% Load filter
 
-line = 40;
+line = 17;
 SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_3000x192_crop20dB/';
 resolution = [3000,192];
 % image = Second_Stage_SMF(RFdata,SMFpath,resolution,useCaseParams);
@@ -106,8 +106,10 @@ resolution = [3000,192];
 load([SMFpath 'SMF_line_' num2str(line)], 'SMFline');
 
 %%
+line=20;
+SMFline=SMF(:,line);
 z = 2;
-
+resolution = [3,192];
 
 filter = zeros(size(RFdata));
 filter(...
@@ -118,6 +120,24 @@ filter(...
 figure(3)
 imagesc(filter)
 
+[m,i]=max(max(filter,[],1));
+fprintf('Max value (%e) at line %i, should be %i\n',m,i,(line-1)*size(RFdata,2)/resolution(2)+1)
+
+%%
+a = zeros(192,1);
+b = zeros(192,1);
+for line = 1:192
+    SMFline=SMF(:,line);
+filter = zeros(size(RFdata));
+filter(...
+    SMFline(z).index(1,1):SMFline(z).index(2,1) ,...
+    SMFline(z).index(1,2):SMFline(z).index(2,2) )...
+    = SMFline(z).filter;
+[~,a(line)]=max(max(filter,[],1));
+b(line) = (line-1)*size(RFdata,2)/resolution(2)+1;
+end
+plot(a-b)
+%%
 fig_nr = 1;
 type = 'psf';
 switch(type)
