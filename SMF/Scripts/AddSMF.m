@@ -38,7 +38,7 @@ function scanline = Secondstage_line_l(filter)
 end
 function scanline = Secondstage_line_r(filter)
     scanline = zeros(resolution(2,1),1);
-    for i = resolution(1,1):resolution(2,1)
+    parfor i = resolution(1,1):resolution(2,1)
         filter(i).filter = fliplr(filter(i).filter);
         filter(i).index(:,2) = [resolution(2,2)-filter(i).index(2,2)+1;resolution(2,2)-filter(i).index(1,2)+1];
         f = crop2view(RFdata,filter(i));
