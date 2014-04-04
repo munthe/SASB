@@ -29,7 +29,7 @@ CFUtools_init % init CFUtools
 rect = [-40*ones(1,9); 10:10:90; 80*ones(1,9); 10*ones(1,9)]';
 
 %% Load first stage
-load([loadpath 'cystphantom/' 'cystRFdataF2_focus0.02mmf03MHz'])
+load([loadpath 'cystphantom/' 'cystRFdataF2_focus20mmf03MHz'])
 
 %% Create second stage image
 

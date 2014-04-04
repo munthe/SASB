@@ -22,7 +22,7 @@ setupfigdefault
 
 %% Load RFdata
 
-scanline = 90:100;
+scanline = 1:192;
 RFdata_collect = zeros(10000,length(scanline));
 samples = zeros(length(scanline),1);
 for i = 1:length(scanline);
@@ -34,7 +34,7 @@ RFdata = RFdata_collect(1:max(samples),:);
 
 %% Save RFdata
 
-str = [savepath 'cystRFdata' 'F' num2str(useCaseParams.bfxmitparams(1).xmitfnum) '_focus' num2str(useCaseParams.bfxmitparams(1).xmitfocus) 'mm' 'f0' num2str(useCaseParams.bfxmitparams(1).xmitfreq/1e6) 'MHz'];
+str = [savepath 'cystRFdata' 'F' num2str(useCaseParams.bfxmitparams(1).xmitfnum) '_focus' num2str(useCaseParams.bfxmitparams(1).xmitfocus*1000) 'mm' 'f0' num2str(useCaseParams.bfxmitparams(1).xmitfreq/1e6) 'MHz'];
 fprintf(['Saving RFdata to ' str '.mat ... ']);
 save(str, 'transducerType','useCaseParams','RFdata','media');
 fprintf('Saved.\n');
