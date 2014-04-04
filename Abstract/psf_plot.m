@@ -42,12 +42,24 @@ set(plot1(3),...
 xlabel('Depth of point scatter [mm]');
 ylabel('[mm]');
 axis([10 80 0.5 2.5]);
-text(depth(1),cell2mat({psf_SMF(1).fwhm_x})-0.1,'SMF','HorizontalAlignment','center');
-%text(depth(1),cell2mat({psf_SMF(1).radius20dB})+0.1,'SMF','HorizontalAlignment','center');
-text(depth(1),cell2mat({psf_SASB(1).fwhm_x})-0.1,'SASB','HorizontalAlignment','center');
-%text(depth(1),cell2mat({psf_SASB(1).radius20dB})+0.1,'SASB','HorizontalAlignment','center');
+text(depth(7),(cell2mat({psf_SMF(7).fwhm_x})+cell2mat({psf_SMF(7).radius20dB}))/2,'SMF','HorizontalAlignment','left');
+%text(depth(1),cell2mat({psf_SMF(7).radius20dB})+0.1,'SMF','HorizontalAlignment','center');
+text(depth(7),(cell2mat({psf_SASB(7).fwhm_x})+cell2mat({psf_SASB(7).radius20dB}))/2,'SASB','HorizontalAlignment','left');
+%text(depth(1),cell2mat({psf_SASB(7).radius20dB})+0.1,'SASB','HorizontalAlignment','center');
 
-legend('FWHM', 'R\_20dB','Location','NorthWest');
+
+% Create arrow
+annotation('arrow',[0.84 0.81],...
+    [0.783444444444444 0.855555555555556],'Color',[0.3 0.3 0.3]);
+annotation('arrow',[0.84 0.81],...
+    [0.359 0.222222222222222],'Color',[0.3 0.3 0.3]);
+annotation('arrow',[0.84 0.81],...
+    [0.425666666666667 0.526666666666667],'Color',[0.3 0.3 0.3]);
+annotation('arrow',[0.84 0.81],...
+    [0.725666666666667 0.628888888888889],'Color',[0.3 0.3 0.3]);
+
+legend('FWHM', 'R_{20dB}','Location','NorthWest');
+legend boxoff
 % title(psf(setting,1).setupDesc);
 prettyfig
 print(figure(fig_nr),[savepath_figures 'psf'],figure_format)
