@@ -4,7 +4,7 @@ addpath('../cluster');
 addpath(genpath('../lib'));
 addpath('./Scripts');
 savepath = '/data/cfudata3/mah/Spatial_matched_filter/';
-tmpdir = 'tmp_SMF/';
+tmpdir = 'dBtest/';
 
 %% CFUtools for measuring
 CFUtools_init % init CFUtools
@@ -59,8 +59,9 @@ else
 end
 
 % Generate one line of the filter
-SMFline = Generate_SMF_line(x_coord(line),resolution(1),useCaseParams,transducerType);
+SMFline = Generate_SMF_line(x_coord(line),resolution(1),useCaseParams,transducerType,-par.dB);
 
 %% Saving SMF
-save([savepath tmpdir 'SMF_line_' num2str(line)],'SMFline','useCaseParams','transducerType','-v7.3' )
+dBfolder = ['dB' num2str(par.dB) '/'];
+save([savepath tmpdir dBfolder 'SMF_line_' num2str(line)],'SMFline','useCaseParams','transducerType','-v7.3' )
 fprintf(['Filter line' line ' saved.']);
