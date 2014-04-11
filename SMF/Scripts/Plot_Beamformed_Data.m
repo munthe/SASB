@@ -161,7 +161,7 @@ if(isreal(RFdata))
     else
 %         RFdata = RFdata./max(RFdata(:));
 %         Data_env = abs(hilbert(RFdata));
-        Data_env = RFdata;
+        Data_env = abs(RFdata);
     end
    
 else
