@@ -69,7 +69,7 @@ useCaseParams.scanparams(1).windowtissueq.y_tismax = 0.101;
 
 %% Generate scatter field
 sca_z = ((15:10:95)/1000)';
-sca_x = (ones(size(sca_z))*15/1000);
+sca_x = (zeros(size(sca_z))*15/1000);
 sca_y = (zeros(size(sca_x))/1000);
 media.phantom_positions = [sca_x sca_y sca_z];
 media.phantom_amplitudes = ones(size(media.phantom_positions,1),1);
@@ -97,19 +97,13 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
                       'media',media);
 
 %% Load filter
-
-line = 17;
-SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_3000x192_crop20dB/';
+coord = [-6.383 64.98];
 resolution = [3000,192];
-% image = Second_Stage_SMF(RFdata,SMFpath,resolution,useCaseParams);
-% save(['./SMFimage' num2str(resolution(1)) 'x' num2str(resolution(2))], 'image','transducerType','useCaseParams','RFdata','resolution','SMFpath','media');
+line = round( (20+coord(1))/40 * resolution(2));
+SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_3000x192_f03MHz_c20dB/';
+resolution = [3000,192];
 load([SMFpath 'SMF_line_' num2str(line)], 'SMFline');
-
-%%
-line=20;
-SMFline=SMF(:,line);
-z = 2;
-resolution = [3,192];
+z = round( (coord(2)-1)/100 * resolution(1) );
 
 filter = zeros(size(RFdata));
 filter(...
@@ -120,57 +114,62 @@ filter(...
 figure(3)
 imagesc(filter)
 
+RFdata_crop = RFdata(SMFline(z).index(1,1):SMFline(z).index(2,1) ,...
+    SMFline(z).index(1,2):SMFline(z).index(2,2) );
+filtered = RFdata_crop.*SMFline(z).filter;
+figure(5)
+subplot(131)
+imagesc(RFdata_crop)
+subplot(132)
+imagesc(SMFline(z).filter)
+subplot(133)
+imagesc(filtered)
+%     SMFline(z).index(1,1):SMFline(z).index(2,1
+
 [m,i]=max(max(filter,[],1));
 fprintf('Max value (%e) at line %i, should be %i\n',m,i,(line-1)*size(RFdata,2)/resolution(2)+1)
 
 %%
-a = zeros(192,1);
-b = zeros(192,1);
-for line = 1:192
-    SMFline=SMF(:,line);
-filter = zeros(size(RFdata));
-filter(...
-    SMFline(z).index(1,1):SMFline(z).index(2,1) ,...
-    SMFline(z).index(1,2):SMFline(z).index(2,2) )...
-    = SMFline(z).filter;
-[~,a(line)]=max(max(filter,[],1));
-b(line) = (line-1)*size(RFdata,2)/resolution(2)+1;
-end
-plot(a-b)
-%%
-fig_nr = 1;
-type = 'psf';
-switch(type)
-    case{'psf'}
-        compression = 'Linear';
-        dynamic_range = 60;
-    case{'B-mode'}
-        compression = 'BK_muLaw_RTSC_VP_DRC_SEL_0';
-        dynamic_range = 100;
-end
-clf(figure(fig_nr))
-plot_obj_sasb_2 = Plot_Beamformed_Data('RFdata', filter, ...
-        'usecaseparams',useCaseParams,...
-        'figure nr', fig_nr, ...
-        'data type','simulation',...
-        'type of beamformation', 'sasb',...
-        'stage','first',...
-        'show tgc','dont show tgc',...
-        'loadpath',[savepath ],...
-        'gain',[],...
-        'windowtissueq',useCaseParams.scanparams(1).windowtissueq,...
-        'compression',compression,...
-        'dynamic range',dynamic_range);
-axis image
-drawnow
-caxis([-60 0])
-set(gcf,'position',[  939   100   735   885])
-set(gca,'position',[ 80    70   640   800])
-drawnow
-
-
-
-
-
-
+% a = zeros(192,1);
+% b = zeros(192,1);
+% for line = 1:192
+%     SMFline=SMF(:,line);
+% filter = zeros(size(RFdata));
+% filter(...) ,...
+%     SMFline(z).index(1,2):SMFline(z).index(2,2) )...
+%     = SMFline(z).filter;
+% [~,a(line)]=max(max(filter,[],1));
+% b(line) = (line-1)*size(RFdata,2)/resolution(2)+1;
+% end
+% plot(a-b)
+% %%
+% fig_nr = 1;
+% type = 'psf';
+% switch(type)
+%     case{'psf'}
+%         compression = 'Linear';
+%         dynamic_range = 60;
+%     case{'B-mode'}
+%         compression = 'BK_muLaw_RTSC_VP_DRC_SEL_0';
+%         dynamic_range = 100;
+% end
+% clf(figure(fig_nr))
+% plot_obj_sasb_2 = Plot_Beamformed_Data('RFdata', filter, ...
+%         'usecaseparams',useCaseParams,...
+%         'figure nr', fig_nr, ...
+%         'data type','simulation',...
+%         'type of beamformation', 'sasb',...
+%         'stage','first',...
+%         'show tgc','dont show tgc',...
+%         'loadpath',[savepath ],...
+%         'gain',[],...
+%         'windowtissueq',useCaseParams.scanparams(1).windowtissueq,...
+%         'compression',compression,...
+%         'dynamic range',dynamic_range);
+% axis image
+% drawnow
+% caxis([-60 0])
+% set(gcf,'position',[  939   100   735   885])
+% set(gca,'position',[ 80    70   640   800])
+% drawnow
 
