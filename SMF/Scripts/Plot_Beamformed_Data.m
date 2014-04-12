@@ -161,7 +161,15 @@ if(isreal(RFdata))
     else
 %         RFdata = RFdata./max(RFdata(:));
 %         Data_env = abs(hilbert(RFdata));
-        Data_env = abs(RFdata);
+% 
+%         Data_env = abs(RFdata);
+
+        [a,b]=butter(2,0.1);
+        sig_abs=abs(RFdata);
+        % RFdata_rec = RFdata.^2; % squaring for rectifing 
+        RFdata_rec = abs(RFdata);
+        Data_env = abs(filter(a,b,RFdata_rec)); %applying LPF, abs for removing complex parts
+        % Data_env = sqrt(Data_env); % Square root for square rectifier
     end
    
 else

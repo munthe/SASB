@@ -158,7 +158,14 @@ if(isreal(RFdata))
     if(useCaseParams.scanparams(1).scantype == 1)
         Data_env = RFdata;
     else
-        Data_env = abs(hilbert(RFdata));
+%         Data_env = abs(hilbert(RFdata));
+
+        [a,b]=butter(2,0.1);
+        sig_abs=abs(RFdata);
+        % RFdata_rec = RFdata.^2; % squaring for rectifing 
+        RFdata_rec = abs(RFdata);
+        Data_env = abs(filter(a,b,RFdata_rec)); %applying LPF, abs for removing complex parts
+        % Data_env = sqrt(Data_env); % Square root for square rectifier
     end
 else
     switch(useCaseParams.scanparams(1).scantype)
