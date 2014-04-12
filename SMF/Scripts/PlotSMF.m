@@ -1,16 +1,22 @@
 function [] = PlotSMF()
 
-load SMFimage3000x192.mat image
+load SMFimage3000x192.mat image useCaseParams
+RFdata = image;
 
-Data_env = abs(image/max(image(:)));
+Data_env = abs(RFdata/max(RFdata(:)));
+% Data_env = abs(hilbert(RFdata));
+
 [TGC,point,val_at_point] = CalculateTGC(Data_env,[]);
 Data_env = Data_env./repmat(TGC(:),1,size(Data_env,2));
 
+Data_lg = logcompress(Data_env);
+Data_lg(Data_lg<-60) = -60;
 
 figure(1);
-plot(Data_env(:,96))
+plot(Data_lg(:,96))
 figure(2);
-imagesc(Data_env)
+imagesc(Data_lg)
+colormap(gray)
 
 end
 
