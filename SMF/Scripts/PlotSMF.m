@@ -3,13 +3,20 @@ function [] = PlotSMF()
 load SMFimage3000x192.mat image useCaseParams
 RFdata = image;
 
-Data_env = abs(RFdata/max(RFdata(:)));
-% Data_env = abs(hilbert(RFdata));
+% Data_env = abs(RFdata/max(RFdata(:))); % normalized abs
+% Data_env = abs(hilbert(RFdata)); % evelope using hilber
+
+[a,b]=butter(2,0.1);
+sig_abs=abs(RFdata);
+% RFdata_rec = RFdata.^2; % squaring for rectifing 
+RFdata_rec = abs(RFdata);
+Data_env = abs(filter(a,b,RFdata_rec)); %applying LPF, abs for removing complex parts
+% Data_env = sqrt(Data_env); % Square root for square rectifier
 
 [TGC,point,val_at_point] = CalculateTGC(Data_env,[]);
 Data_env = Data_env./repmat(TGC(:),1,size(Data_env,2));
 
-Data_lg = logcompress(Data_env);
+Data_lg = 20*log10(Data_env/max(max(Data_env)));
 Data_lg(Data_lg<-60) = -60;
 
 figure(1);
