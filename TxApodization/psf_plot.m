@@ -46,7 +46,7 @@ set(plot1(6),...
 
 xlabel('Depth of point scatter [mm]');
 ylabel('[mm]');
-axis([10 100 1.4 2.6]);
+axis([10 100 1.4 2.61]);
 
 % text(depth(7),(cell2mat({psf_SMF(7).fwhm_x})+cell2mat({psf_SMF(7).radius20dB}))/2,'SMF','HorizontalAlignment','left');
 % %text(depth(1),cell2mat({psf_SMF(7).radius20dB})+0.1,'SMF','HorizontalAlignment','center');
@@ -68,8 +68,32 @@ legend('Boxcar', 'Inf', '0,0.6,1','Location','NorthWest');
 legend boxoff
 % title(psf(setting,1).setupDesc);
 prettyfig(8)
+
 print(figure(fig_nr),[savepath_figures 'psf'],figure_format)
 hold off
+
+%% Plot cystic resolution for scatter 7
+n = 7;
+c = linspecer(5);
+fig_nr = 2;
+set(0, 'DefaultAxesColorOrder', [c(1,:);c(2,:);c(5,:)]);
+
+figure(fig_nr)
+plot(...
+    psf(1,n).radius,psf(1,n).ct,...
+    psf(2,n).radius,psf(2,n).ct,...
+    psf(14,n).radius,psf(14,n).ct,...
+    'LineWidth',1.5 ....
+    );
+xlabel('Radius [mm]')
+ylabel('Attenuation [dB]')
+
+legend('Boxcar', 'Inf', '0,0.6,1','Location','NorthEast');
+legend boxoff
+axis([0 9.5 -35 0]);
+
+prettyfig(8)
+print(figure(fig_nr),[savepath_figures 'cysticresolution'],figure_format)
 
 %% Calculate percentages
 
