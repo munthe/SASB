@@ -3,8 +3,8 @@ function prettyfig(w,h)
 % w: width of printet image in centimeters (default 14 cm)
 % h: height of printet image in centimeters (default 3/4 of w)
 
-if nargin<1, w = 14, end
-if nargin<2, h = w*3/4, end
+if nargin<1, w = 14; end
+if nargin<2, h = w*3/4; end
 
 set( gca, ...
     'FontName'   , 'Helvetica' ,...
