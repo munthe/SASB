@@ -12,7 +12,7 @@ figure_format = '-depsc2';
 setupfigdefault
 
 %% Load point spread function data, output from cfu_get_psf_metrics
-load psf
+load Transducer8804_Focus0.02_F#2.mat
 
 %% Plot psf as function of depth
 n = 1:9;
@@ -29,7 +29,7 @@ plot1 = plot( ...
     depth,cell2mat({psf(2,:).radius20dB}),'v--',...
     depth,cell2mat({psf(14,:).radius20dB}),'o--',...
     'MarkerSize',6, ...
-    'LineWidth',1.5 ...
+    'LineWidth',1 ...
     );
 set(plot1(1),...
      'MarkerFaceColor',c(1,:));
@@ -67,7 +67,7 @@ axis([10 100 1.4 2.6]);
 legend('Boxcar', 'Inf', '0,0.6,1','Location','NorthWest');
 legend boxoff
 % title(psf(setting,1).setupDesc);
-prettyfig
+prettyfig(8)
 print(figure(fig_nr),[savepath_figures 'psf'],figure_format)
 hold off
 
