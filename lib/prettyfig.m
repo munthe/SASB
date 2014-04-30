@@ -33,7 +33,7 @@ set(gca, ...
 
 set(gca, 'ColorOrder', linspecer(7));
 
-%# figure size printed on paper
+% figure size printed on paper
 set(gcf, 'PaperUnits','centimeters')
 % set(gcf, 'PaperSize',[8 8])
 set(gcf, 'PaperOrientation','portrait')
