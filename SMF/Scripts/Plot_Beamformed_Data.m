@@ -765,6 +765,7 @@ else
 end
 
 TGC = yi(:)./max(yi);
+TGC(TGC<3e-3)=3e-3; % Remove too extreme TGC values
 val_at_point = val_at_point(:)./max(yi);
 % val_at_point = val_at_point(:)./TGC(point);
 
