@@ -16,7 +16,7 @@ addpath(genpath('../lib'))
 usecase_filename = 'Pre_SASB_liver_2_1_p';
 
 savepath = loadpath;
-savepath_figures = '../Figures/';
+savepath_figures = '../Figures8820e/';
 figure_format = '-depsc2';
 setupfigdefault
 
