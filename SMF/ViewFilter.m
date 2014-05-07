@@ -98,12 +98,22 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
 
 %% Load filter
 coord = [-6.383 64.98];
-resolution = [3000,192];
+resolution = [5405,192];
 line = round( (20+coord(1))/40 * resolution(2));
-SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_3000x192_f03MHz_c20dB/';
-resolution = [3000,192];
+SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_5405x192_f03MHz_c20dB/';
+resolution = [5405,192];
 load([SMFpath 'SMF_line_' num2str(line)], 'SMFline');
 z = round( (coord(2)-1)/100 * resolution(1) );
+
+l =(useCaseParams.scanparams(1).windowtissueq.y_tismax-useCaseParams.scanparams(1).windowtissueq.y_tismin);
+w =(useCaseParams.scanparams(1).windowtissueq.x_tismax-useCaseParams.scanparams(1).windowtissueq.x_tismin);
+h_mm = (l/resolution(1))*1000;
+b = w/resolution(2);
+line_mm = b*line*1000;
+%b = w/resolution(2);
+ay = [coord(1) coord(2)]*h_mm;
+ax = [(line_mm-0.005) (line_mm+0.005)]*b;
+
 
 filter = zeros(size(RFdata));
 filter(...
@@ -112,18 +122,46 @@ filter(...
     = SMFline(z).filter;
 
 figure(3)
-imagesc(filter)
+imagesc([ax(1) ay(1)], [ax(2) ay(2)],filter)
+colormap(linspecer)
+colorbar
+c = max(abs([min(filter(:)),max(filter(:))]));
+caxis([-c c]);
+xlabel('mm');
+ylabel('mm');
 
 RFdata_crop = RFdata(SMFline(z).index(1,1):SMFline(z).index(2,1) ,...
     SMFline(z).index(1,2):SMFline(z).index(2,2) );
+
 filtered = RFdata_crop.*SMFline(z).filter;
+
+figure(4)
+imagesc([ax(1) ay(1)], [ax(2) ay(2)],RFdata_crop)
+
+colormap(linspecer)
+colorbar
+c = max(abs([min(RFdata_crop(:)),max(RFdata_crop(:))]));
+caxis([-c c]);
+xlabel('mm');
+ylabel('mm');
+
 figure(5)
-subplot(131)
-imagesc(RFdata_crop)
-subplot(132)
-imagesc(SMFline(z).filter)
-subplot(133)
-imagesc(filtered)
+imagesc([ax(1) ay(1)], [ax(2) ay(2)],SMFline(z).filter)
+colormap(linspecer)
+colorbar
+c = max(abs([min(SMFline(z).filter(:)),max(SMFline(z).filter(:))]));
+caxis([-c c]);
+xlabel('mm');
+ylabel('mm');
+
+figure(6)
+imagesc([ax(1) ay(1)], [ax(2) ay(2)],filtered)
+colormap(linspecer)
+colorbar
+c = max(abs([min(filtered(:)),max(filtered(:))]));
+caxis([-c c]);
+xlabel('mm');
+ylabel('mm');
 %     SMFline(z).index(1,1):SMFline(z).index(2,1
 
 [m,i]=max(max(filter,[],1));
