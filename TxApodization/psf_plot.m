@@ -1,5 +1,4 @@
-% Script to plot psf measurements for use in abstract for ieee ultrasound
-% symposium
+% Script to plot psf measurements for report
 
 %% Initilize
 base_path = './';
@@ -58,7 +57,7 @@ axis([10 100 1.2 2.5]);
 %     [0.725666666666667 0.628888888888889],'Color',[0.3 0.3 0.3]);
 
 % legend('FWHM', 'R_{20dB}','Location','NorthWest');
-legend('SMF', 'SASB', '0,0.6,1','SMF+TxApo','Location','NorthWest');
+legend('SMF', 'SASB', 'TxApo','SMF+TxApo','Location','NorthWest');
 legend boxoff
 % title(psf(setting,1).setupDesc);
 prettyfig(14)
@@ -111,7 +110,7 @@ axis([10 100 1.4 3]);
 %     [0.725666666666667 0.628888888888889],'Color',[0.3 0.3 0.3]);
 
 % legend('FWHM', 'R_{20dB}','Location','NorthWest');
-legend('SMF', 'SASB', '0,0.6,1','SMF+TxApo','Location','NorthWest');
+legend('SMF', 'SASB', 'TxApo','SMF+TxApo','Location','NorthWest');
 legend boxoff
 % title(psf(setting,1).setupDesc);
 prettyfig(14)
