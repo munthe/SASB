@@ -1,5 +1,5 @@
 function prettyfig(w,h)
-% PRETTYFIG set asteatics of figures
+% PRETTYFIG set aesteatics of figures
 % w: width of printet image in centimeters (default 14 cm)
 % h: height of printet image in centimeters (default 3/4 of w)
 
