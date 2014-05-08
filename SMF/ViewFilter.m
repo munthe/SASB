@@ -16,7 +16,7 @@ addpath(genpath('../lib'))
 usecase_filename = 'WirePhantom75MHzSlidingFilterOffNormalPulse';
 
 savepath = loadpath;
-savepath_figures = '../Figures_SMF/';
+savepath_figures = '../Figures_filtertest/';
 figure_format = '-depsc2';
 setupfigdefault
 
@@ -97,75 +97,96 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
                       'media',media);
 
 %% Load filter
-coord = [-6.383 64.98];
+coord = [-19 75]/1000;
 resolution = [5405,192];
-line = round( (20+coord(1))/40 * resolution(2));
+line = round( (0.02+coord(1))/0.04 * resolution(2));
 SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_5405x192_f03MHz_c20dB/';
 resolution = [5405,192];
 load([SMFpath 'SMF_line_' num2str(line)], 'SMFline');
-z = round( (coord(2)-1)/100 * resolution(1) );
 
+% Length and width of image [mm]
 l =(useCaseParams.scanparams(1).windowtissueq.y_tismax-useCaseParams.scanparams(1).windowtissueq.y_tismin);
 w =(useCaseParams.scanparams(1).windowtissueq.x_tismax-useCaseParams.scanparams(1).windowtissueq.x_tismin);
-h_mm = (l/resolution(1))*1000;
-b = w/resolution(2);
-line_mm = b*line*1000;
-%b = w/resolution(2);
-ay = [coord(1) coord(2)]*h_mm;
-ax = [(line_mm-0.005) (line_mm+0.005)]*b;
 
+% Pixel depth of scatter
+z = round( (coord(2)-useCaseParams.scanparams(1).windowtissueq.y_tismin)/l * resolution(1) );
 
+% Define axis
+ay = [(SMFline(z).index(1,1)/resolution(1))*l*1000 (SMFline(z).index(2,1)/resolution(1))*l*1000];
+ax = [(SMFline(z).index(1,2)-resolution(2)/2)/resolution(2)*w*1000 (SMFline(z).index(2,2)-resolution(2)/2)/resolution(2)*w*1000];
+
+% Choose filter
 filter = zeros(size(RFdata));
 filter(...
     SMFline(z).index(1,1):SMFline(z).index(2,1) ,...
     SMFline(z).index(1,2):SMFline(z).index(2,2) )...
     = SMFline(z).filter;
 
+setupDesc = ['line_', num2str(line), 'Scatdepth', num2str(coord(2)*1000), ...
+    ];
+
+% Show filter
 figure(3)
-imagesc([ax(1) ay(1)], [ax(2) ay(2)],filter)
+fig_nr = 3;
+imagesc([useCaseParams.scanparams(1).windowtissueq.x_tismin*1000 useCaseParams.scanparams(1).windowtissueq.x_tismax*1000],...
+    [useCaseParams.scanparams(1).windowtissueq.y_tismin*1000 useCaseParams.scanparams(1).windowtissueq.y_tismax*1000],filter)
 colormap(linspecer)
 colorbar
 c = max(abs([min(filter(:)),max(filter(:))]));
 caxis([-c c]);
 xlabel('mm');
 ylabel('mm');
+prettyfig(8)
+% Save
+print(figure(fig_nr),[savepath_figures 'Filter_' setupDesc '.eps'],figure_format)
 
+% Show cropped RFdata
 RFdata_crop = RFdata(SMFline(z).index(1,1):SMFline(z).index(2,1) ,...
     SMFline(z).index(1,2):SMFline(z).index(2,2) );
-
-filtered = RFdata_crop.*SMFline(z).filter;
-
 figure(4)
-imagesc([ax(1) ay(1)], [ax(2) ay(2)],RFdata_crop)
-
+fig_nr = 4;
+imagesc([ax(1) ax(2)], [ay(1) ay(2)],RFdata_crop)
 colormap(linspecer)
 colorbar
 c = max(abs([min(RFdata_crop(:)),max(RFdata_crop(:))]));
 caxis([-c c]);
+prettyfig(8)
 xlabel('mm');
 ylabel('mm');
+% Save
+print(figure(fig_nr),[savepath_figures 'RFdataCrop_' setupDesc '.eps'],figure_format)
 
+% Show cropped filter
 figure(5)
-imagesc([ax(1) ay(1)], [ax(2) ay(2)],SMFline(z).filter)
+fig_nr = 5;
+imagesc([ax(1) ax(2)], [ay(1) ay(2)],SMFline(z).filter)
 colormap(linspecer)
 colorbar
 c = max(abs([min(SMFline(z).filter(:)),max(SMFline(z).filter(:))]));
 caxis([-c c]);
+prettyfig(8)
 xlabel('mm');
 ylabel('mm');
+% Save
+print(figure(fig_nr),[savepath_figures 'FilterCrop_' setupDesc '.eps'],figure_format)
 
+% Show filtered data 
+filtered = RFdata_crop.*SMFline(z).filter;
 figure(6)
-imagesc([ax(1) ay(1)], [ax(2) ay(2)],filtered)
+fig_nr = 6;
+imagesc([ax(1) ax(2)], [ay(1) ay(2)],filtered)
 colormap(linspecer)
 colorbar
 c = max(abs([min(filtered(:)),max(filtered(:))]));
 caxis([-c c]);
+prettyfig(8)
 xlabel('mm');
 ylabel('mm');
-%     SMFline(z).index(1,1):SMFline(z).index(2,1
+% Save
+print(figure(fig_nr),[savepath_figures 'Filtered_' setupDesc '.eps'],figure_format)
 
-[m,i]=max(max(filter,[],1));
-fprintf('Max value (%e) at line %i, should be %i\n',m,i,(line-1)*size(RFdata,2)/resolution(2)+1)
+%[m,i]=max(max(filter,[],1));
+%fprintf('Max value (%e) at line %i, should be %i\n',m,i,(line-1)*size(RFdata,2)/resolution(2)+1)
 
 %%
 % a = zeros(192,1);
