@@ -135,7 +135,7 @@ print(figure(fig_nr),[savepath_figures 'FirstStage8804 ' setupDesc],figure_forma
 %% Create second stage image
 
 SMFpath = '/data/cfudata3/mah/Spatial_matched_filter/SMF_1000_192_crop20dB/';
-resolution = [1000,192];
+resolution = [5405,192];
 image = Second_Stage_SMF(RFdata,SMFpath,resolution,useCaseParams);
 save(['./SMFimage' num2str(resolution(1)) 'x' num2str(resolution(2))], 'image','transducerType','useCaseParams','RFdata','resolution','SMFpath','media');
 
