@@ -3,6 +3,8 @@
 % clear all
 % close all
 
+% Script to visualize filters
+
 base_path = './';
 loadpath = './';
 base_path_usecase = './';
