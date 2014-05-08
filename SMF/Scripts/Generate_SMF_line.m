@@ -31,7 +31,7 @@ SMF = struct('filter',filter,'index',index);
 end
 
 function [SMF,index] = Generate_SMF_point(position,useCaseParams,transducerType,cropdB)
-
+% Creates filter for scatter located at position
 media.phantom_positions = position;
 media.phantom_amplitudes = 1;
 
