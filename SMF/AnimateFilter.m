@@ -102,7 +102,16 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
 coord = [0 75]/1000;
 resolution = [5405,192];
 SMFpath = './';
-load([SMFpath 'SMF_depth_' num2str(coord(2)*1000)], 'SMFline');
+load([SMFpath 'SMF_depth_' num2str(coord(2)*1000)], 'SMFdepth');
+
+AX = 1000*linspace(useCaseParams.scanparams(1).windowtissueq.x_tismin,useCaseParams.scanparams(1).windowtissueq.x_tismax,resolution(2));
+
+
+writerObj = VideoWriter('filter.avi');
+open(writerObj);
+
+clear profile
+for scanline = 1:resolution(2)/2;
 
 % Length and width of image [mm]
 l =(useCaseParams.scanparams(1).windowtissueq.y_tismax-useCaseParams.scanparams(1).windowtissueq.y_tismin);
@@ -115,9 +124,6 @@ z = round( (coord(2)-useCaseParams.scanparams(1).windowtissueq.y_tismin)/l * res
 ay = [(SMFdepth(scanline).index(1,1)/resolution(1))*l*1000 (SMFdepth(scanline).index(2,1)/resolution(1))*l*1000];
 ax = [(SMFdepth(scanline).index(1,2)-resolution(2)/2)/resolution(2)*w*1000 (SMFdepth(scanline).index(2,2)-resolution(2)/2)/resolution(2)*w*1000];
 
-scanline = 1;
-
-
 % Choose filter
 filter = zeros(size(RFdata));
 filter(...
@@ -128,63 +134,50 @@ filter(...
 setupDesc = ['line_', num2str(line), 'Scatdepth', num2str(coord(2)*1000), ...
     ];
 
-% Show filter
-figure(3)
-fig_nr = 3;
-imagesc([useCaseParams.scanparams(1).windowtissueq.x_tismin*1000 useCaseParams.scanparams(1).windowtissueq.x_tismax*1000],...
-    [useCaseParams.scanparams(1).windowtissueq.y_tismin*1000 useCaseParams.scanparams(1).windowtissueq.y_tismax*1000],filter)
-colormap(linspecer)
-colorbar
-c = max(abs([min(filter(:)),max(filter(:))]));
-caxis([-c c]);
-xlabel('mm');
-ylabel('mm');
-prettyfig(8)
-% Save
-print(figure(fig_nr),[savepath_figures 'Filter_' setupDesc '.eps'],figure_format)
+figure(1)
 
 % Show cropped RFdata
+subplot(231)
 RFdata_crop = RFdata(SMFdepth(scanline).index(1,1):SMFdepth(scanline).index(2,1) ,...
     SMFdepth(scanline).index(1,2):SMFdepth(scanline).index(2,2) );
-figure(4)
-fig_nr = 4;
 imagesc([ax(1) ax(2)], [ay(1) ay(2)],RFdata_crop)
 colormap(linspecer)
-colorbar
+% colorbar
 c = max(abs([min(RFdata_crop(:)),max(RFdata_crop(:))]));
 caxis([-c c]);
-prettyfig(8)
 xlabel('mm');
 ylabel('mm');
-% Save
-print(figure(fig_nr),[savepath_figures 'RFdataCrop_' setupDesc '.eps'],figure_format)
 
 % Show cropped filter
-figure(5)
-fig_nr = 5;
+subplot(232)
 imagesc([ax(1) ax(2)], [ay(1) ay(2)],SMFdepth(scanline).filter)
 colormap(linspecer)
-colorbar
+% colorbar
 c = max(abs([min(SMFdepth(scanline).filter(:)),max(SMFdepth(scanline).filter(:))]));
 caxis([-c c]);
-prettyfig(8)
 xlabel('mm');
 ylabel('mm');
-% Save
-print(figure(fig_nr),[savepath_figures 'FilterCrop_' setupDesc '.eps'],figure_format)
 
 % Show filtered data 
+subplot(233)
 filtered = RFdata_crop.*SMFdepth(scanline).filter;
-figure(6)
-fig_nr = 6;
 imagesc([ax(1) ax(2)], [ay(1) ay(2)],filtered)
 colormap(linspecer)
-colorbar
+% colorbar
 c = max(abs([min(filtered(:)),max(filtered(:))]));
 caxis([-c c]);
-prettyfig(8)
 xlabel('mm');
 ylabel('mm');
-% Save
-print(figure(fig_nr),[savepath_figures 'Filtered_' setupDesc '.eps'],figure_format)
+
+subplot(212)
+profile(scanline) = sum(filtered(:))
+scatter(AX(scanline),profile(scanline))
+plot(AX(1:scanline),profile)
+axis([AX(1) AX(end) -2.1116e-45 6.1314e-44])
+
+frame = getframe(gcf);
+writeVideo(writerObj,frame);
+end
+
+close(writerObj);
 
