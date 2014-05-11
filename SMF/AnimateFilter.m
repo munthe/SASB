@@ -102,16 +102,22 @@ RFdata = Data_Acquisition('usecaseparams',useCaseParams, ...
 coord = [0 75]/1000;
 resolution = [5405,192];
 SMFpath = './';
-load([SMFpath 'SMF_depth_' num2str(coord(2)*1000)], 'SMFdepth');
+load([SMFpath 'SMF_depth_' num2str(coord(2)*1000)], 'SMFdepth','useCaseParams');
 
 AX = 1000*linspace(useCaseParams.scanparams(1).windowtissueq.x_tismin,useCaseParams.scanparams(1).windowtissueq.x_tismax,resolution(2));
 
+for i=  resolution(2)/2:-1:1
+    scanline = resolution(2) - i+1;
+    SMFdepth(scanline).filter = fliplr(SMFdepth(i).filter);
+    SMFdepth(scanline).index(:,1) = SMFdepth(i).index(:,1)
+    SMFdepth(scanline).index(:,2) = [resolution(2)-SMFdepth(i).index(2,2)+1;resolution(2)-SMFdepth(i).index(1,2)+1];
+end
 
 writerObj = VideoWriter('filter.avi');
 open(writerObj);
 
 clear profile
-for scanline = 1:resolution(2)/2;
+for scanline = 1:resolution(2);
 
 % Length and width of image [mm]
 l =(useCaseParams.scanparams(1).windowtissueq.y_tismax-useCaseParams.scanparams(1).windowtissueq.y_tismin);
@@ -147,6 +153,7 @@ c = max(abs([min(RFdata_crop(:)),max(RFdata_crop(:))]));
 caxis([-c c]);
 xlabel('mm');
 ylabel('mm');
+prettyfig
 
 % Show cropped filter
 subplot(232)
@@ -157,6 +164,7 @@ c = max(abs([min(SMFdepth(scanline).filter(:)),max(SMFdepth(scanline).filter(:))
 caxis([-c c]);
 xlabel('mm');
 ylabel('mm');
+prettyfig
 
 % Show filtered data 
 subplot(233)
@@ -168,15 +176,18 @@ c = max(abs([min(filtered(:)),max(filtered(:))]));
 caxis([-c c]);
 xlabel('mm');
 ylabel('mm');
+prettyfig
 
 subplot(212)
-profile(scanline) = sum(filtered(:))
+profile(scanline) = sum(filtered(:));
 scatter(AX(scanline),profile(scanline))
-plot(AX(1:scanline),profile)
+plot(AX(1:scanline),profile,'LineWidth',2)
 axis([AX(1) AX(end) -2.1116e-45 6.1314e-44])
 
+prettyfig
 frame = getframe(gcf);
 writeVideo(writerObj,frame);
+
 end
 
 close(writerObj);
